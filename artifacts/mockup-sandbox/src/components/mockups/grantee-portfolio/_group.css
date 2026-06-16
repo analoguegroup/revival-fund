@@ -1,0 +1,176 @@
+@font-face {
+  font-family: 'Mean Hand';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/__mockup/fonts/mean_hand_400.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Mean Hand';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/__mockup/fonts/mean_hand_500.ttf') format('truetype');
+}
+
+.rf-portfolio {
+  /* Site palette (mirrors client/src/index.css) */
+  --stone: #f5f6f8;
+  --parchment: #0a0c12;
+  --clay: #565d6e;
+  --cobalt: #0c3981;
+  --cobalt-dark: #092a63;
+  --hair: rgba(34, 40, 56, 0.15);
+
+  --font-display: 'Mean Hand', cursive;
+  --font-serif: 'Crimson Text', Georgia, serif;
+  --font-name: 'Cardo', Georgia, serif;
+  --font-mono: 'Space Mono', monospace;
+
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  background-color: var(--stone);
+  /* Layered cyanotype exposure washes — translucent cobalt blooms */
+  background-image:
+    radial-gradient(115% 80% at 0% 0%, rgba(12, 57, 129, 0.13), rgba(12, 57, 129, 0) 58%),
+    radial-gradient(120% 95% at 100% 100%, rgba(12, 57, 129, 0.10), rgba(12, 57, 129, 0) 55%),
+    linear-gradient(180deg, rgba(12, 57, 129, 0.05), rgba(12, 57, 129, 0) 30%);
+  background-repeat: no-repeat;
+  color: var(--parchment);
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cyanotype paper wash + fine grain (mirrors site body::before/::after) */
+.rf-portfolio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='cyWash'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.009' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.047 0 0 0 0 0.224 0 0 0 0 0.506 0.7 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cyWash)'/%3E%3C/svg%3E");
+  background-size: cover;
+  mix-blend-mode: multiply;
+  opacity: 0.13;
+}
+.rf-portfolio::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='cyGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cyGrain)'/%3E%3C/svg%3E");
+  background-size: 150px 150px;
+  mix-blend-mode: multiply;
+  opacity: 0.06;
+}
+
+.rf-portfolio .rf-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.rf-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.rf-name {
+  font-family: var(--font-name);
+  font-weight: 400;
+}
+
+.rf-mono {
+  font-family: var(--font-mono);
+}
+
+/* Section header accent line (mirrors .section-header-line) */
+.rf-rule {
+  position: relative;
+  height: 2px;
+  width: 100%;
+  background: var(--hair);
+}
+
+/* Category tag — sharp-cornered cobalt mono pill (mirrors portfolio tags) */
+.rf-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 0.25rem 0.5rem;
+  color: var(--cobalt);
+  background: rgba(12, 57, 129, 0.07);
+  border: 1px solid rgba(12, 57, 129, 0.25);
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+/* Frosted translucent panel — lets the cyanotype texture read through */
+.rf-glass {
+  background:
+    linear-gradient(rgba(12, 57, 129, 0.04), rgba(12, 57, 129, 0.04)),
+    rgba(245, 246, 248, 0.30);
+  backdrop-filter: blur(3px) saturate(1.05);
+  -webkit-backdrop-filter: blur(3px) saturate(1.05);
+  border: 1px solid var(--hair);
+  border-radius: 0;
+}
+
+/* Translucent stratum — a single layer of glass for rows / entries */
+.rf-layer {
+  position: relative;
+  background:
+    linear-gradient(rgba(12, 57, 129, 0.03), rgba(12, 57, 129, 0.03)),
+    rgba(245, 246, 248, 0.18);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+  transition: background 0.4s ease;
+}
+.rf-layer:hover {
+  background:
+    linear-gradient(rgba(12, 57, 129, 0.07), rgba(12, 57, 129, 0.07)),
+    rgba(245, 246, 248, 0.32);
+}
+
+/* Bordered card — now a frosted cyanotype glass layer */
+.rf-card {
+  position: relative;
+  border: 1px solid var(--hair);
+  border-radius: 0;
+  background:
+    linear-gradient(rgba(12, 57, 129, 0.045), rgba(12, 57, 129, 0.045)),
+    rgba(245, 246, 248, 0.32);
+  backdrop-filter: blur(2.5px) saturate(1.05);
+  -webkit-backdrop-filter: blur(2.5px) saturate(1.05);
+  transition: border-color 0.4s ease, background 0.4s ease;
+  cursor: default;
+}
+.rf-card:hover {
+  border-color: rgba(12, 57, 129, 0.4);
+  background:
+    linear-gradient(rgba(12, 57, 129, 0.085), rgba(12, 57, 129, 0.085)),
+    rgba(245, 246, 248, 0.46);
+}
+.rf-card:hover .rf-name {
+  color: var(--cobalt);
+}
+.rf-name {
+  transition: color 0.4s ease;
+}
+
+.rf-link {
+  color: var(--cobalt);
+  border-bottom: 1px solid rgba(12, 57, 129, 0.3);
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.rf-link:hover {
+  color: var(--cobalt-dark);
+  border-bottom-color: var(--cobalt-dark);
+}

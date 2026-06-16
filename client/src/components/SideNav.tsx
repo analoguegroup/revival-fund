@@ -1,0 +1,253 @@
+import { Link, useLocation } from "wouter";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+type Leaf =
+  | { label: string; kind: "scroll"; target: string; path: string }
+  | { label: string; kind: "link"; href: string };
+
+type Group = Leaf & { children?: Leaf[] };
+
+const NAV_TREE: Group[] = [
+  {
+    label: "About",
+    kind: "scroll",
+    target: "about",
+    path: "/",
+    children: [
+      { label: "Team", kind: "scroll", target: "team", path: "/team" },
+      { label: "FAQ", kind: "scroll", target: "faq", path: "/faq" },
+    ],
+  },
+  { label: "Projects", kind: "link", href: "/projects" },
+  { label: "Portfolio", kind: "link", href: "/writings" },
+];
+
+const FLAT: Leaf[] = NAV_TREE.flatMap((item) => [
+  item,
+  ...(item.children ?? []),
+]);
+
+export default function SideNav({ revealed = true }: { revealed?: boolean }) {
+  const [location, navigate] = useLocation();
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [activeSection, setActiveSection] = useState("about");
+
+  const pendingScroll = useRef<string | null>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Scroll spy: highlight the hole matching the section currently in view
+  // (only on the home route, where About / Team / FAQ are stacked sections).
+  useEffect(() => {
+    if (location !== "/") return;
+    const ids = ["about", "team", "faq"];
+    let raf = 0;
+    const compute = () => {
+      raf = 0;
+      const threshold = window.innerHeight * 0.35;
+      let current = "about";
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= threshold) current = id;
+      }
+      setActiveSection(current);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(compute);
+    };
+    compute();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [location]);
+
+  const scrollToSection = useCallback((target: string) => {
+    if (target === "about") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return true;
+    }
+    const el = document.getElementById(target);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      return true;
+    }
+    return false;
+  }, []);
+
+  // After navigating home, scroll to the queued section once it has mounted.
+  useEffect(() => {
+    if (location !== "/" || !pendingScroll.current) return;
+    let raf = 0;
+    let attempts = 0;
+    const run = () => {
+      if (!pendingScroll.current) return;
+      if (scrollToSection(pendingScroll.current) || attempts++ > 120) {
+        pendingScroll.current = null;
+        return;
+      }
+      raf = requestAnimationFrame(run);
+    };
+    raf = requestAnimationFrame(run);
+    return () => cancelAnimationFrame(raf);
+  }, [location, scrollToSection]);
+
+  const handleScrollTab = useCallback(
+    (target: string) => {
+      if (location === "/") {
+        scrollToSection(target);
+      } else {
+        pendingScroll.current = target;
+        navigate("/");
+      }
+    },
+    [location, navigate, scrollToSection]
+  );
+
+  const isActive = (item: Leaf) => {
+    if (item.kind === "link") return location === item.href;
+    return location === "/"
+      ? activeSection === item.target
+      : location === item.path;
+  };
+
+  // ── Punched "hole" + label ────────────────────────────────────────────────
+  const Hole = ({ active, sub }: { active: boolean; sub?: boolean }) => (
+    <span
+      aria-hidden="true"
+      className={`relative z-10 shrink-0 rounded-full border-2 transition-all duration-200 ${
+        active
+          ? "bg-[#0c3981] border-[#0c3981]"
+          : "bg-[#dfe1e6] border-[#0c3981] group-hover:bg-[#0c3981]/40"
+      }`}
+      style={{
+        width: sub ? 12 : 18,
+        height: sub ? 12 : 18,
+        boxShadow: active
+          ? "0 0 0 4px rgba(12, 57, 129, 0.16)"
+          : "inset 0 1px 2px rgba(0, 0, 0, 0.18)",
+      }}
+    />
+  );
+
+  const Label = ({
+    label,
+    active,
+    sub,
+  }: {
+    label: string;
+    active: boolean;
+    sub?: boolean;
+  }) => (
+    <span
+      className={`relative z-10 font-mono uppercase whitespace-nowrap transition-colors duration-200 ${
+        active
+          ? "text-[#0c3981] font-bold"
+          : "text-[#7a766e] group-hover:text-[#0c3981]"
+      }`}
+      style={{
+        fontSize: sub ? "0.6rem" : "0.65rem",
+        letterSpacing: "0.16em",
+      }}
+    >
+      {label}
+    </span>
+  );
+
+  const renderItem = (item: Leaf, sub: boolean) => {
+    const active = isActive(item);
+    const testId = `link-nav-${item.label.toLowerCase()}`;
+    const className = `group flex items-center ${
+      sub ? "gap-3" : "gap-3.5"
+    } bg-transparent border-0 p-0 cursor-pointer text-left`;
+    const children = (
+      <>
+        <Hole active={active} sub={sub} />
+        <Label label={item.label} active={active} sub={sub} />
+      </>
+    );
+
+    if (item.kind === "link") {
+      return (
+        <Link
+          key={item.label}
+          href={item.href}
+          className={`${className} no-underline`}
+          data-testid={testId}
+        >
+          {children}
+        </Link>
+      );
+    }
+    return (
+      <button
+        key={item.label}
+        type="button"
+        className={className}
+        onClick={() => handleScrollTab(item.target)}
+        data-testid={testId}
+      >
+        {children}
+      </button>
+    );
+  };
+
+  // ── Desktop: vertical ring-binder margin with nested sub-holes ────────────
+  const renderDesktop = () => (
+    <div className="relative flex flex-col gap-7 py-3 pl-6 pr-4">
+      {/* Binder rod running through the punched holes */}
+      <span
+        aria-hidden="true"
+        className="absolute top-3 bottom-3"
+        style={{
+          left: "33px",
+          width: "2px",
+          transform: "translateX(-1px)",
+          background: "rgba(12, 57, 129, 0.22)",
+        }}
+      />
+      {NAV_TREE.map((item) => (
+        <div key={item.label} className="flex flex-col gap-4">
+          {renderItem(item, false)}
+          {item.children && (
+            <div className="flex flex-col gap-4 pl-7">
+              {item.children.map((child) => renderItem(child, true))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  // ── Mobile: horizontal row of holes (flattened) ──────────────────────────
+  const renderMobile = () => (
+    <div className="flex flex-row flex-wrap items-center justify-center gap-x-5 gap-y-3">
+      {FLAT.map((item) => renderItem(item, false))}
+    </div>
+  );
+
+  return (
+    <nav
+      className="nav-bottom-bar fixed z-[1000] left-0 right-0 bottom-0 px-4 py-3 flex justify-center sm:left-0 sm:right-auto sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:block sm:px-0 sm:py-0 sm:bg-none"
+      data-testid="nav-side"
+      aria-hidden={!revealed}
+      {...(!revealed ? { inert: "" as unknown as boolean } : {})}
+      style={{
+        opacity: revealed ? 1 : 0,
+        pointerEvents: revealed ? "auto" : "none",
+        transition: "opacity 0.5s ease",
+      }}
+    >
+      {isDesktop ? renderDesktop() : renderMobile()}
+    </nav>
+  );
+}

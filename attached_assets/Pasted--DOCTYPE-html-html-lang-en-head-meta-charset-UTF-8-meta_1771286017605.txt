@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Revival Fund — About</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --slate: #2a2623;
+            --stone: #3d3834;
+            --patina: #4a443f;
+            --gold: #c9b896;
+            --gold-bright: #e8d4a8;
+            --parchment: #e8e2d9;
+            --clay: #8b7355;
+            --gutter: 6vw;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--slate);
+            color: var(--parchment);
+            font-family: 'Cormorant Garamond', serif;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Stone texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Geometric survey lines */
+        .survey-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(201, 184, 150, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(201, 184, 150, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2.5rem var(--gutter);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(201, 184, 150, 0.15);
+            background: linear-gradient(to bottom, var(--slate) 80%, transparent);
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.875rem;
+            letter-spacing: 0.2em;
+            text-decoration: none;
+            color: var(--gold);
+            text-transform: uppercase;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .logo::before {
+            content: '◈';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 4rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--parchment);
+            text-decoration: none;
+            opacity: 0.6;
+            position: relative;
+            transition: all 0.4s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 var(--gutter);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Hero with bas-relief effect */
+        .hero {
+            padding: 22vh 0 10vh;
+            position: relative;
+            border-bottom: 1px solid rgba(201, 184, 150, 0.2);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 2rem;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            border: 1px solid rgba(201, 184, 150, 0.3);
+            background: 
+                linear-gradient(45deg, transparent 48%, rgba(201, 184, 150, 0.2) 49%, rgba(201, 184, 150, 0.2) 51%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(201, 184, 150, 0.2) 49%, rgba(201, 184, 150, 0.2) 51%, transparent 52%);
+        }
+
+        .hero-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--clay);
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+            color: var(--parchment);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            line-height: 1.7;
+            max-width: 600px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        /* Sections with carved appearance */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+            border-bottom: 1px solid rgba(201, 184, 150, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--clay);
+            letter-spacing: 0.1em;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--gold);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(to right, var(--gold), transparent);
+        }
+
+        .section p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            max-width: 75ch;
+        }
+
+        /* Relief cards - stone slabs */
+        .relief-grid {
+            display: grid;
+            gap: 2px;
+            background: var(--stone);
+            margin: 3rem 0;
+            border: 1px solid rgba(201, 184, 150, 0.2);
+        }
+
+        .relief-card {
+            background: var(--slate);
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .relief-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            opacity: 0.5;
+        }
+
+        .relief-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .relief-card p {
+            font-size: 1.0625rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Magic square reference for 3-col */
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        /* Process as archaeological phases */
+        .process {
+            display: flex;
+            margin: 3rem 0;
+            border: 1px solid rgba(201, 184, 150, 0.2);
+            background: rgba(61, 56, 52, 0.3);
+        }
+
+        .process-step {
+            flex: 1;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            border-right: 1px solid rgba(201, 184, 150, 0.1);
+        }
+
+        .process-step:last-child {
+            border-right: none;
+        }
+
+        .process-step .num {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 0.5rem;
+            opacity: 0.6;
+        }
+
+        .process-step h4 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--parchment);
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .process-step p {
+            font-size: 0.9375rem;
+            margin: 0;
+            opacity: 0.7;
+        }
+
+        /* Gold leaf accent box */
+        .gilded-box {
+            margin: 4rem 0;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(201, 184, 150, 0.08), transparent);
+            border: 1px solid rgba(201, 184, 150, 0.25);
+            position: relative;
+        }
+
+        .gilded-box::before {
+            content: '◈';
+            position: absolute;
+            top: -0.8rem;
+            left: 2rem;
+            background: var(--slate);
+            padding: 0 1rem;
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .gilded-box h3 {
+            font-size: 1.25rem;
+            color: var(--gold-bright);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        /* Footer as stone inscription */
+        footer {
+            padding: 6rem var(--gutter);
+            text-align: center;
+            position: relative;
+            border-top: 1px solid rgba(201, 184, 150, 0.15);
+            background: radial-gradient(ellipse at center, rgba(61, 56, 52, 0.4), transparent);
+        }
+
+        footer::before {
+            content: '▬';
+            display: block;
+            color: var(--gold);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            opacity: 0.4;
+            letter-spacing: 2rem;
+        }
+
+        .patronage {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--clay);
+            margin-bottom: 1.5rem;
+        }
+
+        footer p {
+            font-size: 1.125rem;
+            color: var(--parchment);
+            margin-bottom: 0.5rem;
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(201, 184, 150, 0.3);
+            transition: border-color 0.3s;
+        }
+
+        footer a:hover {
+            border-bottom-color: var(--gold);
+        }
+
+        .copyright {
+            margin-top: 3rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6875rem;
+            color: var(--clay);
+            letter-spacing: 0.15em;
+        }
+
+        @media (max-width: 768px) {
+            .grid-3 { grid-template-columns: 1fr; }
+            .process { flex-direction: column; }
+            .process-step { border-right: none; border-bottom: 1px solid rgba(201, 184, 150, 0.1); }
+            .relief-card { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-grid"></div>
+
+    <nav>
+        <a href="#" class="logo">RRF</a>
+        <ul class="nav-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Team</a></li>
+            <li><a href="#">FAQ</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        
+        <div class="hero">
+            <span class="hero-label">Archival Recovery Initiative</span>
+            <h1>Research Revival Fund</h1>
+            <p>We restore neglected, illegible, or prematurely dismissed research to active circulation—excavating intellectual lineages and producing canonical artifacts.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <span class="section-num">01</span>
+                <h2>What We Do</h2>
+            </div>
+            <p>We work with researchers, scholars, and original thinkers to excavate intellectual lineages, clarify claims, and produce canonical artifacts—interviews, dossiers, essays, films—that make forgotten or marginalized inquiry legible again.</p>
+            <p>Our work addresses a fundamental problem: valuable research disappears not because it lacks merit, but because it lacks the infrastructure, language, or institutional alignment to survive. We provide that infrastructure.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <span class="section-num">02</span>
+                <h2>What We Believe</h2>
+            </div>
+            
+            <div class="relief-grid grid-3">
+                <div class="relief-card">
+                    <h3>Materiality</h3>
+                    <p>Research gets lost through linguistic marginalization, institutional dismissal, unprofitable timing or cultural illegibility. Research needs deliberate preservation.</p>
+                </div>
+                <div class="relief-card">
+                    <h3>Nonlinearity</h3>
+                    <p>The way knowledge emerges and re-emerges is winding, contingent, influenced by shifting relevance. What seemed marginal in one era may prove essential in another.</p>
+                </div>
+                <div class="relief-card">
+                    <h3>Sensibility</h3>
+                    <p>Different artifacts reveal different sensibilities. We publish fluidly to work with the form each research project demands, preserving diversity in ways of knowing.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <span class="section-num">03</span>
+                <h2>How We Work</h2>
+            </div>
+            <p>Research Revival operates on a spectrum of collaboration:</p>
+            
+            <div class="process">
+                <div class="process-step">
+                    <span class="num">I</span>
+                    <h4>Publishing</h4>
+                    <p>Format and disseminate completed revival work</p>
+                </div>
+                <div class="process-step">
+                    <span class="num">II</span>
+                    <h4>Support</h4>
+                    <p>Funding for archival research and materials</p>
+                </div>
+                <div class="process-step">
+                    <span class="num">III</span>
+                    <h4>Assembly</h4>
+                    <p>Build interdisciplinary teams for execution</p>
+                </div>
+            </div>
+
+            <div class="gilded-box">
+                <h3>Grant Allocation</h3>
+                <p style="margin: 0;">Maximum funding per project cycle: <strong style="color: var(--gold); font-weight: 500;">$10,000 USD</strong></p>
+            </div>
+        </div>
+
+        <div class="section" style="border-bottom: none;">
+            <div class="section-header">
+                <span class="section-num">04</span>
+                <h2>Contact</h2>
+            </div>
+            <p>To support Research Revival Fund as a patron, or to inquire about funding:</p>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="patronage">Patronage Inquiries</div>
+        <p><a href="mailto:wendi@analoguegroup.org">wendi@analoguegroup.org</a></p>
+        <p><a href="mailto:aish@analoguegroup.org">aish@analoguegroup.org</a></p>
+        <div class="copyright">Research Revival Fund © 2026</div>
+    </footer>
+
+</body>
+</html>

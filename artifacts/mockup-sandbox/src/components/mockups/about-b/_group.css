@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.hairline-ledger {
+  background-color: #F9F8F6;
+  color: #1C1B1A;
+  font-family: 'Fraunces', serif;
+}
+
+.hairline-ledger .font-mono {
+  font-family: 'Space Mono', monospace;
+}
+
+.hairline-ledger .accent {
+  color: #D9381E;
+}
+
+.hairline-ledger .border-hairline {
+  border-color: #E2DFD8;
+}
+
+.hairline-ledger .bg-hairline {
+  background-color: #E2DFD8;
+}
+
+/* Base text sizing */
+.hairline-ledger p {
+  line-height: 1.6;
+}
