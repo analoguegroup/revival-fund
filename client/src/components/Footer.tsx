@@ -41,7 +41,7 @@ export default function Footer() {
                 className="no-underline transition-colors duration-300 footer-link"
                 style={{ color: "var(--gold)", borderBottom: "1px solid rgba(34, 40, 56, 0.3)" }}
               >
-                Aish
+                Aishwarya
               </a>.
             </p>
 
