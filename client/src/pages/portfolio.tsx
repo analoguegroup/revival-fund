@@ -88,9 +88,7 @@ function GranteePlateCard({
             className="absolute right-[92px] top-1/2 -translate-y-1/2 text-right text-[0.72rem] uppercase tracking-wider select-none transition-colors duration-300 font-bold whitespace-nowrap"
             style={{ 
               fontFamily: SANS,
-              color: isHovered 
-                ? (isDark ? "rgb(255, 255, 255)" : ACCENT) 
-                : (isDark ? "rgba(255, 255, 255, 0.4)" : "rgb(148, 163, 184)") 
+              color: isHovered ? ACCENT : "rgba(12, 57, 129, 0.6)"
             }}
           >
             {grantee.period}
@@ -125,7 +123,7 @@ function GranteePlateCard({
 
           {/* Horizontal Connector Line to Card */}
           <div 
-            className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[1px] border-t border-dashed transition-colors duration-300"
+            className="absolute left-0 right-0 top-1/2 h-0 border-t border-dashed transition-colors duration-300"
             style={{
               borderColor: isHovered 
                 ? (isDark ? "rgba(255, 255, 255, 0.6)" : ACCENT) 
@@ -238,7 +236,7 @@ function GranteePlateCard({
                 className="text-xl sm:text-2xl font-normal leading-none"
                 style={{ fontFamily: "'Mean Hand', cursive" }}
               >
-                {grantee.names}
+                {grantee.names.replace(/l/g, "L")}
               </span>
             </div>
 
@@ -312,14 +310,6 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-screen relative overflow-x-hidden" style={{ color: INK, fontFamily: SERIF }}>
-      {/* Binder Left Margin Line */}
-      <div 
-        className="absolute left-[30px] sm:left-[112px] top-0 bottom-0 w-[1px] hidden sm:block pointer-events-none z-[3]"
-        style={{
-          borderLeft: `1px dashed ${HAIRLINE}`,
-        }}
-      />
-
       <div 
         className="relative z-[10] pl-8 sm:pl-24 pr-8 sm:pr-[var(--gutter)]"
       >
@@ -338,13 +328,20 @@ export default function Portfolio() {
           </h1>
         </div>
 
-        {/* Introduction and Toggle Row */}
+        <div className="relative">
+          {/* Binder Left Margin Line */}
+          <div 
+            className="absolute left-[-2px] sm:left-[16px] top-0 bottom-0 w-[1px] hidden sm:block pointer-events-none z-[3]"
+            style={{
+              borderLeft: `1px dashed ${HAIRLINE}`,
+            }}
+          />
+
+          {/* Toggle Row */}
         <div
-          className="pt-8 pb-8 text-base sm:text-lg text-slate-600 font-serif flex flex-col md:flex-row md:items-center justify-between gap-6"
+          className="pt-8 pb-8 text-base sm:text-lg text-slate-600 font-serif flex flex-col md:flex-row md:items-center justify-end gap-6"
           style={{ fontFamily: SERIF }}
         >
-          <span>Announcing our first cycle of grantee projects:</span>
-          
           {/* Telemetry style View Toggle */}
           <div className="flex items-center gap-6 font-mono text-[0.78rem] tracking-wider select-none shrink-0">
             <button
@@ -416,6 +413,7 @@ export default function Portfolio() {
             })}
           </div>
         )}
+        </div>
 
         {/* Image Source Credits Footer */}
         <div 

@@ -247,7 +247,7 @@ export default function SideNav({ revealed = true }: { revealed?: boolean }) {
       style={{
         opacity: revealed ? 1 : 0,
         pointerEvents: revealed ? "auto" : "none",
-        transition: "opacity 0.5s ease",
+        transition: "opacity 0.4s ease",
       }}
     >
       {isDesktop ? renderDesktop() : renderMobile()}

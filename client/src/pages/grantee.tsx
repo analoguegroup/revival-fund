@@ -328,11 +328,21 @@ export default function Grantee() {
             {grantee.names.includes(" & ") ? (
               grantee.names.split(" & ").map((name, idx) => (
                 <span key={idx} className="block">
-                  {idx > 0 && "&\u00a0\u00a0\u00a0\u00a0"}{name.replace(/\s+/g, "\u00a0\u00a0\u00a0\u00a0")}
+                  {name.split(/\s+/).map((word, wIdx) => (
+                    <span key={wIdx} className="inline-block mr-[1.2em] last:mr-0">
+                      {word.replace(/l/g, "L")}
+                    </span>
+                  ))}
                 </span>
               ))
             ) : (
-              grantee.names.replace(/\s+/g, "\u00a0\u00a0\u00a0\u00a0")
+              <span className="block">
+                {grantee.names.split(/\s+/).map((word, wIdx) => (
+                  <span key={wIdx} className="inline-block mr-[1.2em] last:mr-0">
+                    {word.replace(/l/g, "L")}
+                  </span>
+                ))}
+              </span>
             )}
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-[180px_1fr_240px] gap-8 lg:gap-14">

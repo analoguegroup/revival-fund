@@ -48,7 +48,7 @@ function Router() {
       setShownPath(targetPath);
       setTransitionStep("sweep");
       window.scrollTo(0, 0);
-    }, 400);
+    }, 600);
 
     setTimeout(() => {
       setTransitionStep("idle");
@@ -60,7 +60,7 @@ function Router() {
         pendingLocation.current = null;
         runTransition(queued);
       }
-    }, 1800);
+    }, 2000);
   }, []);
 
   useEffect(() => {
@@ -78,7 +78,7 @@ function Router() {
 
   return (
     <>
-      <Header />
+      <Header isTransitioning={transitionStep !== "idle"} />
       {/* Incoming Page (Clipped/masked container) */}
       <div 
         ref={contentRef} 

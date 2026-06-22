@@ -857,7 +857,7 @@ body::after {
 }
 
 .animate-fade-out-only {
-  animation: fadeOutOnly 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fadeOutOnly 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* Responsive Footer Mobile Font Size (80% of 0.86rem -> 0.69rem) */

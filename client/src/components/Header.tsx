@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import SideNav from "@/components/SideNav";
 
-export default function Header() {
+export default function Header({ isTransitioning = false }: { isTransitioning?: boolean }) {
   const [location] = useLocation();
   const isHome = location === "/";
   const [isDesktop, setIsDesktop] = useState(false);
@@ -52,7 +52,7 @@ export default function Header() {
           paddingTop: isDesktop ? "0.9rem" : "calc(0.9rem + env(safe-area-inset-top, 0px))",
           paddingLeft: "var(--gutter)",
           paddingRight: "var(--gutter)",
-          paddingBottom: "5rem",
+          paddingBottom: "3rem",
           background:
             "linear-gradient(to bottom, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 0%, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 18%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)",
           opacity: revealed ? 1 : 0,
@@ -79,7 +79,7 @@ export default function Header() {
           </Link>
         </div>
       </header>
-      <SideNav revealed={revealed} />
+      <SideNav revealed={revealed && !isTransitioning} />
     </>
   );
 }
