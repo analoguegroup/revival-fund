@@ -113,7 +113,7 @@ function GranteePlateCard({
           </div>
 
           {/* Right Column: Specimen Reticle Observatory */}
-          <div className="shrink-0 flex items-center justify-center select-none relative">
+          <div className="hidden md:flex shrink-0 items-center justify-center select-none relative">
             <div
               className="relative w-40 h-40 rounded-full border border-dashed border-slate-300/80 flex items-center justify-center overflow-hidden transition-transform duration-300 ease-out"
               style={{

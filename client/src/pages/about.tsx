@@ -22,10 +22,6 @@ import {
 
 
 
-import luxuryMetalFrame from "@assets/luxury_metal_frame.png";
-import luxuryGlassSphere from "@assets/luxury_glass_sphere.png";
-import luxuryRefractionLens from "@assets/luxury_refraction_lens.png";
-
 
 type LedgerItem = { num: string; title: string; body: string; testId?: string };
 
@@ -160,108 +156,6 @@ const richText: RichWord[] = [
   { text: "active", type: "text" },
   { text: "circulation.", type: "text" },
 ];
-
-function LiquidGlassFilters() {
-  const coordsMapSvg = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="392" height="392" viewBox="0 0 392 392">
-    <defs>
-      <linearGradient id="rx" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#000000" />
-        <stop offset="100%" stop-color="#ff0000" />
-      </linearGradient>
-      <linearGradient id="gy" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#000000" />
-        <stop offset="100%" stop-color="#00ff00" />
-      </linearGradient>
-    </defs>
-    <rect width="392" height="392" fill="url(#rx)" />
-    <rect width="392" height="392" fill="url(#gy)" style="mix-blend-mode: screen" />
-  </svg>
-  `;
-  const coordsMapUri = `data:image/svg+xml;utf8,${encodeURIComponent(coordsMapSvg.trim())}`;
-
-  const radialMaskSvg = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="392" height="392" viewBox="0 0 392 392">
-    <defs>
-      <radialGradient id="rm" cx="196" cy="196" r="140" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color="#ffffff" />
-        <stop offset="70%" stop-color="#a0a0a0" />
-        <stop offset="100%" stop-color="#000000" />
-      </radialGradient>
-    </defs>
-    <rect width="392" height="392" fill="url(#rm)" />
-  </svg>
-  `;
-  const radialMaskUri = `data:image/svg+xml;utf8,${encodeURIComponent(radialMaskSvg.trim())}`;
-
-  const noiseMaskSvg = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="392" height="392" viewBox="0 0 392 392">
-    <defs>
-      <radialGradient id="nm" cx="196" cy="196" r="140" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color="#000000" />
-        <stop offset="50%" stop-color="#000000" />
-        <stop offset="90%" stop-color="#ffffff" />
-        <stop offset="100%" stop-color="#ffffff" />
-      </radialGradient>
-    </defs>
-    <rect width="392" height="392" fill="url(#nm)" />
-  </svg>
-  `;
-  const noiseMaskUri = `data:image/svg+xml;utf8,${encodeURIComponent(noiseMaskSvg.trim())}`;
-
-  return (
-    <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true" focusable="false">
-      <defs>
-        <filter id="liquid-glass-filter" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
-          {/* 1. Load the coordinate map and radial mask */}
-          <feImage href={coordsMapUri} result="coords-map" />
-          <feImage href={radialMaskUri} result="radial-mask" />
-          <feImage href={noiseMaskUri} result="noise-mask" />
-
-          {/* 2. Calculate coordinates displacement masked to 0 at edges: coords * mask - 0.5 * mask + 0.5 */}
-          <feComposite in="coords-map" in2="radial-mask" operator="arithmetic" k1="1" k2="0" k3="-0.5" k4="0.5" result="masked-displacement" />
-
-          {/* 3. Generate vertical glass ripple noise */}
-          <feTurbulence type="fractalNoise" baseFrequency="0.08 0.005" numOctaves="2" seed="5" result="noise" />
-
-          {/* 4. Mask the noise so it is zero in the center of the lens */}
-          <feComposite in="noise" in2="noise-mask" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="masked-noise" />
-
-          {/* 5. Scale noise (0.06) and add to displacement, with a -0.03 offset to center the noise */}
-          <feComposite in="masked-displacement" in2="masked-noise" operator="arithmetic" k1="0" k2="1" k3="0.06" k4="-0.03" result="final-displacement-map" />
-
-          {/* 7. Extract R, G, B channels of the backdrop graphic */}
-          <feColorMatrix type="matrix" values="
-            1 0 0 0 0
-            0 0 0 0 0
-            0 0 0 0 0
-            0 0 0 1 0" in="SourceGraphic" result="red-ch" />
-
-          <feColorMatrix type="matrix" values="
-            0 0 0 0 0
-            0 1 0 0 0
-            0 0 0 0 0
-            0 0 0 1 0" in="SourceGraphic" result="green-ch" />
-
-          <feColorMatrix type="matrix" values="
-            0 0 0 0 0
-            0 0 0 0 0
-            0 0 1 0 0
-            0 0 0 1 0" in="SourceGraphic" result="blue-ch" />
-
-          {/* 8. Displace channels independently for physical chromatic aberration */}
-          <feDisplacementMap in="red-ch" in2="final-displacement-map" xChannelSelector="R" yChannelSelector="G" scale="0" result="disp-red" />
-          <feDisplacementMap in="green-ch" in2="final-displacement-map" xChannelSelector="R" yChannelSelector="G" scale="0" result="disp-green" />
-          <feDisplacementMap in="blue-ch" in2="final-displacement-map" xChannelSelector="R" yChannelSelector="G" scale="0" result="disp-blue" />
-
-          {/* 9. Merge channels back together */}
-          <feBlend mode="screen" in="disp-red" in2="disp-green" result="rg" />
-          <feBlend mode="screen" in="rg" in2="disp-blue" result="lit-glass" />
-        </filter>
-      </defs>
-    </svg>
-  );
-}
 
 export default function About() {
   useSEO({
@@ -411,7 +305,7 @@ export default function About() {
         <CrosshairStar className="absolute bottom-0 left-[30px] sm:left-[210px] lg:left-[230px] -translate-x-1/2 translate-y-1/2 hidden sm:block pointer-events-none z-[20]" />
         
         {/* Layer 0: Prussian Blue Blueprint Background */}
-        <div className="absolute inset-0 z-[1] blueprint-grid flex flex-col justify-center pl-8 sm:pl-[246px] lg:pl-[266px] pr-12 sm:pr-[15vw] lg:pr-[22vw]">
+        <div className="absolute inset-0 z-[1] blueprint-grid flex flex-col justify-center pl-8 sm:pl-[246px] lg:pl-[266px] pr-8 sm:pr-[15vw] lg:pr-[22vw]">
           <div className="relative z-[1]">
             {renderHeroText(false)}
           </div>
@@ -419,7 +313,7 @@ export default function About() {
 
         {/* Layer 1: Parchment Overlay */}
         <div 
-          className="absolute inset-0 z-[2] bg-background flex flex-col justify-center pl-8 sm:pl-[246px] lg:pl-[266px] pr-12 sm:pr-[15vw] lg:pr-[22vw]"
+          className="absolute inset-0 z-[2] bg-background flex flex-col justify-center pl-8 sm:pl-[246px] lg:pl-[266px] pr-8 sm:pr-[15vw] lg:pr-[22vw]"
           style={{
             clipPath: `circle(140px at ${lensPos.x}px ${lensPos.y}px)`,
           }}
@@ -443,12 +337,9 @@ export default function About() {
           <div>4.5m</div>
         </div>
 
-        {/* Liquid Glass Custom Filters */}
-        <LiquidGlassFilters />
-
         {/* Sliding Lens Container */}
         <div
-          className="absolute pointer-events-none z-[4] hidden sm:block"
+          className="absolute pointer-events-none z-[4]"
           style={{
             left: lensPos.x - 200,
             top: lensPos.y - 200,
@@ -456,70 +347,6 @@ export default function About() {
             height: 400,
           }}
         >
-          {/* Backdrop Filter Glass Lens */}
-          <div 
-            className="absolute rounded-full overflow-hidden"
-            style={{
-              left: 60,
-              top: 60,
-              width: 280,
-              height: 280,
-              backdropFilter: 'url(#liquid-glass-filter) contrast(1.05) brightness(0.96)',
-              WebkitBackdropFilter: 'url(#liquid-glass-filter) contrast(1.05) brightness(0.96)',
-            }}
-          >
-            {/* Refraction Profile Overlay */}
-            <div 
-              className="absolute inset-0 mix-blend-overlay opacity-20 pointer-events-none"
-              style={{
-                backgroundImage: `url(${luxuryRefractionLens})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            />
-
-            {/* Glass Sphere Highlights & Reflections Overlay */}
-            <div 
-              className="absolute inset-0 mix-blend-screen opacity-25 pointer-events-none"
-              style={{
-                backgroundImage: `url(${luxuryGlassSphere})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            />
-
-            {/* Polarized Camera Anti-Reflective Optical Coating - Amber/Gold Glass Hue */}
-            <div 
-              className="absolute inset-0 mix-blend-screen opacity-10 pointer-events-none"
-              style={{
-                background: 'radial-gradient(circle at 35% 35%, rgba(255, 210, 80, 0.6) 0%, rgba(230, 130, 10, 0.35) 45%, rgba(160, 60, 0, 0.2) 75%, transparent 100%)',
-              }}
-            />
-
-            {/* Anamorphic Specular Glint Sweeps */}
-            <div 
-              className="absolute inset-0 pointer-events-none opacity-20"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 55%, rgba(255,255,255,0) 100%)',
-              }}
-            />
-          </div>
-
-          {/* Beaded Metallic Frame Bezel */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              left: 55,
-              top: 55,
-              width: 290,
-              height: 290,
-              backgroundImage: `url(${luxuryMetalFrame})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              mixBlendMode: 'screen',
-              opacity: 0.35,
-            }}
-          />
 
           {/* Sketchy Manuscript Lens Border Guidelines overlay */}
           <svg 

@@ -53,7 +53,7 @@ export default function Header() {
       >
         <div
           className="flex items-center justify-between gap-4 pb-[0.9rem]"
-          style={{ borderBottom: "1px solid rgba(245, 246, 248, 0.25)" }}
+          style={{ borderBottom: "none" }}
         >
           <Link
             href="/"

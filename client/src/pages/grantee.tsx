@@ -7,7 +7,7 @@ import NotFound from "@/pages/not-found";
 import { getGrantee, TYPE_LABELS, grantees } from "@/data/grantees";
 import { INK, ACCENT, HAIRLINE, BODY, MUTED, MONO, SERIF, SANS, Leader, CrosshairStar } from "@/components/editorial";
 import { Linkedin, Globe, ArrowLeft } from "lucide-react";
-import { SiX, SiSubstack, SiInstagram } from "react-icons/si";
+import { SiX, SiSubstack, SiInstagram, SiBluesky } from "react-icons/si";
 
 function ParallaxPortrait({ caption, photo }: { caption: string; photo?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -352,7 +352,7 @@ export default function Grantee() {
         <div className="grid grid-cols-1 md:grid-cols-[180px_1fr_240px] gap-8 lg:gap-14 pt-10 sm:pt-14 pb-16 sm:pb-24 relative">
 
           {/* Left Column: Lato Metadata */}
-          <Reveal className="md:col-start-1 md:row-start-1 flex flex-col gap-6 font-lato text-[1.02rem] tracking-wider text-slate-400 select-none">
+          <Reveal className="order-last md:order-first md:col-start-1 md:row-start-1 flex flex-col gap-6 font-lato text-[0.75rem] tracking-wider text-slate-400 select-none">
             <div>
               <div className="text-slate-900 font-bold uppercase mb-1">Cycle</div>
               <div className="text-slate-700">2026</div>
@@ -442,6 +442,7 @@ export default function Grantee() {
                         else if (link.platform === "linkedin") icon = <Linkedin className="w-4 h-4" />;
                         else if (link.platform === "substack") icon = <SiSubstack className="w-4 h-4" />;
                         else if (link.platform === "instagram") icon = <SiInstagram className="w-4 h-4" />;
+                        else if (link.platform === "bluesky") icon = <SiBluesky className="w-4 h-4" />;
                         else if (link.platform === "website") icon = <Globe className="w-4 h-4" />;
                         
                         return (
@@ -465,7 +466,7 @@ export default function Grantee() {
               </div>
 
               {/* Bio portrait in the right column - perfectly top-aligned with the text */}
-              <div className="md:col-start-3 self-start">
+              <div className="md:col-start-3 self-start max-w-[260px] md:max-w-none">
                 <Reveal>
                   <ParallaxPortrait caption={bio.name} photo={bio.photo} />
                 </Reveal>

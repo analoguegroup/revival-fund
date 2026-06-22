@@ -11,7 +11,7 @@ import irisPhoto from "@/assets/images/grantees/iris-long.jpg";
 export type GranteeType = "archive" | "experiment" | "tooling";
 
 export interface LinkInfo {
-  platform: "x" | "linkedin" | "substack" | "instagram" | "website";
+  platform: "x" | "linkedin" | "substack" | "instagram" | "website" | "bluesky";
   url: string;
 }
 
@@ -86,6 +86,14 @@ export const grantees: Grantee[] = [
 \nShe is a member of the Curatorial Ensemble of the 2026 edition of Counterpublic, one of the nation’s largest public civic exhibitions, titled Coyote Time. She was Co-Curator with Andrea Bellini of the Biennale de L’Image en Mouvement 2024, A Cosmic Movie Camera, hosted by Centre d'Art Contemporain Genève. The edition was the highest-attended in the biennale’s history. As curator of Manual Override at The Shed (2020), she worked with Sondra Perry, Morehshin Allahyari, and Lynn Hershman Leeson on new commissions, in an exhibition that featured major works by Simon Fujiwara and Martine Syms.
 \nShe is currently Faculty in Creative Technologies at UCSC, and has served as Arts Council Professor at UCLA in Design Media Arts, History and Theory faculty at SCI-Arc, and professor in Digital + Media at Rhode Island School of Design, where she was nominated for the John R. Frazier Award for Excellence in Teaching. Her books are AI Art and the Stakes for Art Criticism (2026), Seeing, Naming, Knowing (2019) and Fear Indexing the X-Files (2017), with Steven Warwick.`,
         photo: noraPhoto,
+        links: [
+          { platform: "website", url: "https://noranahidkhan.com/" },
+          { platform: "bluesky", url: "https://bsky.app/profile/prometheanwatch.bsky.social" },
+          { platform: "x", url: "https://x.com/bodyfullofeyes" },
+          { platform: "instagram", url: "https://www.instagram.com/prometheanwatch" },
+          { platform: "substack", url: "https://substack.com/@prometheanwatch" },
+          { platform: "linkedin", url: "https://www.linkedin.com/in/nora-khan-a1163027a/" },
+        ],
       },
     ],
     themes: ["Collectives", "Epistemology", "Metascience", "Organization", "Archives"],
