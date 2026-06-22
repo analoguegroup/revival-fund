@@ -447,8 +447,8 @@ export default function About() {
         <LiquidGlassFilters />
 
         {/* Sliding Lens Container */}
-        <div 
-          className="absolute pointer-events-none z-[4]"
+        <div
+          className="absolute pointer-events-none z-[4] hidden sm:block"
           style={{
             left: lensPos.x - 200,
             top: lensPos.y - 200,
@@ -516,6 +516,8 @@ export default function About() {
               backgroundImage: `url(${luxuryMetalFrame})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
+              mixBlendMode: 'screen',
+              opacity: 0.35,
             }}
           />
 
