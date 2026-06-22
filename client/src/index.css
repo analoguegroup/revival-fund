@@ -230,6 +230,10 @@
     @apply border-border;
   }
 
+  html {
+    overflow-x: hidden;
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
     font-weight: 400;
@@ -482,6 +486,7 @@
 .reveal.is-visible {
   opacity: 1;
   transform: none;
+  will-change: auto;
 }
 @media (prefers-reduced-motion: reduce) {
   .reveal,
@@ -797,6 +802,75 @@ body::after {
   background-image: url("/exclusive-paper.png");
   background-repeat: repeat;
 }
+
+/* ── Portfolio Card Fly-In Scroll reveal ──────────────── */
+.reveal.reveal-card {
+  opacity: 0;
+  transform: translateY(80px) scale(0.96);
+  transition: opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.reveal-card.is-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* T-Square Page Transitions */
+@keyframes tSquareSweep {
+  0% {
+    transform: translate3d(0, 0%, 0);
+  }
+  100% {
+    transform: translate3d(0, 100vh, 0);
+  }
+}
+
+@keyframes revealClip {
+  0% {
+    clip-path: inset(0px 0px 100% 0px);
+    -webkit-clip-path: inset(0px 0px 100% 0px);
+  }
+  100% {
+    clip-path: inset(0px 0px 0% 0px);
+    -webkit-clip-path: inset(0px 0px 0% 0px);
+  }
+}
+
+@keyframes fadeOutOnly {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-sweep {
+  animation: tSquareSweep 1400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-reveal-clip {
+  animation: revealClip 1400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: clip-path;
+}
+
+.animate-fade-out-only {
+  animation: fadeOutOnly 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Responsive Footer Mobile Font Size (80% of 0.86rem -> 0.69rem) */
+@media (max-width: 639px) {
+  footer p,
+  footer a,
+  footer span,
+  footer div,
+  footer h4 {
+    font-size: 0.69rem !important;
+  }
+}
+
 
 
 

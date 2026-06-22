@@ -6,7 +6,7 @@ import bookFringeImg from "@/assets/images/book_fringe.jpg";
 export default function Footer() {
   return (
     <footer
-      className="relative z-[2] pl-8 sm:pl-24 pr-8 sm:pr-[var(--gutter)] pb-24"
+      className="relative z-[2] pl-8 sm:pl-24 pr-8 sm:pr-[var(--gutter)] pb-10 sm:pb-24"
     >
       <div
         className="flex flex-col gap-12"

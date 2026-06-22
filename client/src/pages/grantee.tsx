@@ -494,9 +494,7 @@ export default function Grantee() {
               <div 
                 ref={tunerDeckRef}
                 className="relative rounded-sm overflow-hidden select-none border-l border-r border-slate-200/90 dark:border-slate-800"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E")`,
-                }}
+                style={{}}
               >
                 {/* Floating Tooltip outside scroll area - Flat 2D styling */}
                 <div 
@@ -506,7 +504,6 @@ export default function Grantee() {
                     left: `${tooltipState.left}px`,
                     transform: "translateX(-50%)",
                     backgroundColor: "var(--background, #fff)",
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E")`,
                   }}
                 >
                   {/* Decorative subtle top brackets */}

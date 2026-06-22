@@ -34,151 +34,34 @@ function Routes() {
 function Router() {
   const [location, navigate] = useLocation();
   const [shownPath, setShownPath] = useState(location);
+  const [transitionStep, setTransitionStep] = useState<"idle" | "fade-out" | "sweep">("idle");
   const contentRef = useRef<HTMLDivElement>(null);
   const animating = useRef(false);
   const pendingLocation = useRef<string | null>(null);
 
-  const makeTable = (progress: number) => {
-    const steps = 24;
-    const softness = 0.15;
-    const vals: number[] = [];
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const diff = t - progress;
-      vals.push(diff > softness ? 1 : diff < 0 ? 0 : Math.round((diff / softness) * 100) / 100);
-    }
-    return vals.join(' ');
-  };
-
-  const easeInOut = (t: number) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-
-  const generateCloudMask = useCallback((size: number) => {
-    const c = document.createElement('canvas');
-    c.width = size;
-    c.height = size;
-    const ctx = c.getContext('2d')!;
-    const img = ctx.createImageData(size, size);
-    const d = img.data;
-
-    const octaves = 5;
-    const noise2d = (ox: number, oy: number, freq: number) => {
-      const v = Math.sin(ox * freq * 1.3 + oy * freq * 0.7) *
-                Math.cos(oy * freq * 1.1 - ox * freq * 0.9) *
-                Math.sin((ox + oy) * freq * 0.6);
-      return v;
-    };
-
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        let val = 0;
-        let amp = 1;
-        let totalAmp = 0;
-        for (let o = 0; o < octaves; o++) {
-          const freq = 0.008 * Math.pow(2, o);
-          val += noise2d(x + Math.random() * 0.5, y + Math.random() * 0.5, freq) * amp;
-          totalAmp += amp;
-          amp *= 0.5;
-        }
-        val = val / totalAmp;
-        const normalized = (val + 1) * 0.5;
-        const contrast = 0.35;
-        const v = Math.max(0, Math.min(255, Math.round((normalized * contrast + (1 - contrast) * 0.5) * 255)));
-        const idx = (y * size + x) * 4;
-        d[idx] = v;
-        d[idx + 1] = v;
-        d[idx + 2] = v;
-        d[idx + 3] = 255;
-      }
-    }
-    ctx.putImageData(img, 0, 0);
-
-    ctx.filter = 'blur(3px)';
-    ctx.drawImage(c, 0, 0);
-    ctx.filter = 'none';
-
-    return c.toDataURL();
-  }, []);
-
   const runTransition = useCallback((targetPath: string) => {
     animating.current = true;
-    const el = contentRef.current;
-    const funcA = document.getElementById('grain-threshold');
-    const turbulence = document.getElementById('grain-noise');
-    if ((window as any).__skipTransition || !el || !funcA) {
-      (window as any).__skipTransition = false;
+    setTransitionStep("fade-out");
+    document.documentElement.classList.add("overflow-hidden");
+
+    setTimeout(() => {
       setShownPath(targetPath);
+      setTransitionStep("sweep");
       window.scrollTo(0, 0);
+    }, 400);
+
+    setTimeout(() => {
+      setTransitionStep("idle");
       animating.current = false;
-      return;
-    }
-
-    const cloudUrl = generateCloudMask(256);
-    const setMask = (url: string) => {
-      el.style.setProperty('-webkit-mask-image', `url(${url})`);
-      el.style.setProperty('mask-image', `url(${url})`);
-      el.style.setProperty('-webkit-mask-size', '512px 512px');
-      el.style.setProperty('mask-size', '512px 512px');
-      el.style.setProperty('-webkit-mask-repeat', 'repeat');
-      el.style.setProperty('mask-repeat', 'repeat');
-    };
-    const clearMask = () => {
-      ['-webkit-mask-image', 'mask-image', '-webkit-mask-size', 'mask-size', '-webkit-mask-repeat', 'mask-repeat'].forEach(p => el.style.removeProperty(p));
-    };
-
-    setMask(cloudUrl);
-    el.style.filter = 'url(#grain-dissolve)';
-    el.style.opacity = '1';
-
-    const isMobile = window.matchMedia('(max-width: 639px)').matches;
-    const outDuration = isMobile ? 200 : 280;
-    const inDuration = isMobile ? 240 : 300;
-    let start = performance.now();
-
-    const dissolveOut = (time: number) => {
-      const p = Math.min((time - start) / outDuration, 1);
-      const eased = easeInOut(p);
-      funcA.setAttribute('tableValues', makeTable(eased));
-      el.style.opacity = String(1 - eased);
-
-      if (p < 1) {
-        requestAnimationFrame(dissolveOut);
-      } else {
-        window.scrollTo(0, 0);
-        const next = pendingLocation.current || targetPath;
+      window.scrollTo(0, 0);
+      document.documentElement.classList.remove("overflow-hidden");
+      if (pendingLocation.current) {
+        const queued = pendingLocation.current;
         pendingLocation.current = null;
-        setShownPath(next);
-        if (turbulence) turbulence.setAttribute('seed', String(Math.floor(Math.random() * 1000)));
-        setMask(generateCloudMask(256));
-        el.style.opacity = '0';
-        start = performance.now();
-        requestAnimationFrame(dissolveIn);
+        runTransition(queued);
       }
-    };
-
-    const dissolveIn = (time: number) => {
-      const p = Math.min((time - start) / inDuration, 1);
-      const eased = easeInOut(p);
-      funcA.setAttribute('tableValues', makeTable(1 - eased));
-      el.style.opacity = String(eased);
-
-      if (p < 1) {
-        requestAnimationFrame(dissolveIn);
-      } else {
-        el.style.filter = 'none';
-        el.style.opacity = '1';
-        clearMask();
-        funcA.setAttribute('tableValues', '1 1');
-        animating.current = false;
-        if (pendingLocation.current) {
-          const queued = pendingLocation.current;
-          pendingLocation.current = null;
-          runTransition(queued);
-        }
-      }
-    };
-
-    requestAnimationFrame(dissolveOut);
-  }, [generateCloudMask]);
+    }, 1800);
+  }, []);
 
   useEffect(() => {
     if (location === shownPath) return;
@@ -189,40 +72,59 @@ function Router() {
     runTransition(location);
   }, [location, shownPath, runTransition]);
 
-  const frozenHook = useCallback(() => {
+  const frozenIncomingHook = useCallback(() => {
     return [shownPath, navigate] as [string, (to: string) => void];
   }, [shownPath, navigate]);
 
   return (
     <>
-      <svg style={{ position: 'absolute', width: 0, height: 0 }} aria-hidden="true">
-        <defs>
-          <filter id="grain-dissolve" x="0%" y="0%" width="100%" height="100%" colorInterpolationFilters="sRGB">
-            <feTurbulence id="grain-noise" type="fractalNoise" baseFrequency="0.035" numOctaves="4" seed="42" result="noise" />
-            <feColorMatrix in="noise" type="saturate" values="0" result="gray" />
-            <feComponentTransfer in="gray" result="mask">
-              <feFuncA id="grain-threshold" type="table" tableValues="1 1" />
-            </feComponentTransfer>
-            <feComposite in="SourceGraphic" in2="mask" operator="in" />
-          </filter>
-          <filter id="hand-drawn" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
-            <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="37" result="noise" />
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
-            <feColorMatrix in="blur" type="matrix" result="goo"
-              values="1 0 0 0 0
-                      0 1 0 0 0
-                      0 0 1 0 0
-                      0 0 0 14 -6" />
-            <feDisplacementMap in="goo" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
       <Header />
-      <WouterRouter hook={frozenHook}>
-        <div ref={contentRef} className="pb-28 sm:pb-0 sm:pl-[150px] lg:pl-[170px]">
+      {/* Incoming Page (Clipped/masked container) */}
+      <div 
+        ref={contentRef} 
+        className={`pb-28 sm:pb-0 sm:pl-[150px] lg:pl-[170px] ${
+          transitionStep === "fade-out" 
+            ? "animate-fade-out-only" 
+            : transitionStep === "sweep" 
+              ? "animate-reveal-clip" 
+              : ""
+        }`}
+        style={{
+          height: transitionStep !== "idle" ? "100vh" : "auto",
+          overflow: transitionStep !== "idle" ? "hidden" : "visible",
+          position: "relative",
+          zIndex: 20,
+        }}
+      >
+        <WouterRouter hook={frozenIncomingHook}>
           <Routes />
+        </WouterRouter>
+      </div>
+
+      {/* T-Square Drafting Sweep Overlay */}
+      {transitionStep !== "idle" && (
+        <div 
+          className={`fixed inset-x-0 h-[1px] bg-[#0c3981] dark:bg-slate-400 z-[99999] pointer-events-none ${
+            transitionStep === "sweep" ? "animate-sweep" : ""
+          }`}
+          style={{ top: 0, transform: transitionStep === "fade-out" ? "translate3d(0, 0, 0)" : undefined }}
+        >
+          {/* T-Square Left readout label */}
+          <div className="absolute left-6 top-[-18px] font-mono text-[9px] tracking-wider text-slate-500/90 dark:text-slate-400/90 uppercase whitespace-nowrap bg-background/80 dark:bg-[#0a0c12]/80 px-1 border border-slate-200 dark:border-slate-800 pointer-events-none select-none">
+            [Y_SWEEP // AXIS-Y]
+          </div>
+          
+          {/* T-Square Center Crosshair alignment node */}
+          <div className="absolute left-[50%] top-[-5px] -translate-x-1/2 w-2.5 h-2.5 rounded-full border border-[#0c3981] dark:border-slate-400 bg-background dark:bg-[#0a0c12] flex items-center justify-center pointer-events-none select-none">
+            <div className="w-1 h-1 bg-[#0c3981] dark:bg-slate-400 rounded-full" />
+          </div>
+          
+          {/* T-Square Right readout label */}
+          <div className="absolute right-6 top-[-18px] font-mono text-[9px] tracking-wider text-slate-500/90 dark:text-slate-400/90 uppercase whitespace-nowrap bg-background/80 dark:bg-[#0a0c12]/80 px-1 border border-slate-200 dark:border-slate-800 pointer-events-none select-none">
+            [SYS_TRANSITION // PHI]
+          </div>
         </div>
-      </WouterRouter>
+      )}
     </>
   );
 }

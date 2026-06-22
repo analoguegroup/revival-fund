@@ -218,7 +218,7 @@ export default function SideNav({ revealed = true }: { revealed?: boolean }) {
       {NAV_TREE.map((item) => (
         <div key={item.label} className="flex flex-col gap-4">
           {renderItem(item, false)}
-          {item.children && (
+          {item.children && location === "/" && (
             <div className="flex flex-col gap-4 pl-7">
               {item.children.map((child) => renderItem(child, true))}
             </div>
@@ -229,11 +229,14 @@ export default function SideNav({ revealed = true }: { revealed?: boolean }) {
   );
 
   // ── Mobile: horizontal row of holes (flattened) ──────────────────────────
-  const renderMobile = () => (
-    <div className="flex flex-row flex-wrap items-center justify-center gap-x-5 gap-y-3">
-      {FLAT.map((item) => renderItem(item, false))}
-    </div>
-  );
+  const renderMobile = () => {
+    const items = location === "/" ? FLAT : NAV_TREE;
+    return (
+      <div className="flex flex-row flex-wrap items-center justify-center gap-x-5 gap-y-3">
+        {items.map((item) => renderItem(item, false))}
+      </div>
+    );
+  };
 
   return (
     <nav

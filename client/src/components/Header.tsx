@@ -5,9 +5,22 @@ import SideNav from "@/components/SideNav";
 export default function Header() {
   const [location] = useLocation();
   const isHome = location === "/";
+  const [isDesktop, setIsDesktop] = useState(false);
   const [revealed, setRevealed] = useState(!isHome);
 
   useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!isDesktop) {
+      setRevealed(true);
+      return;
+    }
     if (!isHome) {
       setRevealed(true);
       return;
@@ -27,7 +40,7 @@ export default function Header() {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
-  }, [isHome]);
+  }, [isHome, isDesktop]);
 
   return (
     <>
@@ -39,14 +52,8 @@ export default function Header() {
           padding: "0.9rem var(--gutter) 5rem",
           background:
             "linear-gradient(to bottom, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 0%, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 18%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)",
-          backdropFilter: "blur(6px)",
-          WebkitBackdropFilter: "blur(6px)",
-          maskImage:
-            "linear-gradient(to bottom, black 0%, black 30%, transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, black 0%, black 30%, transparent 100%)",
           opacity: revealed ? 1 : 0,
-          transform: revealed ? "translateY(0)" : "translateY(-100%)",
+          transform: revealed ? "translate3d(0, 0, 0)" : "translate3d(0, -100%, 0)",
           pointerEvents: revealed ? "auto" : "none",
           transition: "opacity 0.5s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)",
         }}
