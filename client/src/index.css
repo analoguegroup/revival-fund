@@ -724,7 +724,7 @@
 
 @media (max-width: 639px) {
   .nav-bottom-bar {
-    background: linear-gradient(to top, hsl(var(--background)) 55%, transparent 100%);
+    background: linear-gradient(to top, hsl(var(--background)) 0%, hsl(var(--background)) 85%, transparent 100%);
     padding-top: 2rem;
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
   }

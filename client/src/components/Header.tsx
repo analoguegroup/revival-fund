@@ -45,17 +45,21 @@ export default function Header({ isTransitioning = false }: { isTransitioning?: 
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-[999]"
+        className="fixed z-[999]"
         aria-hidden={!revealed}
         {...(!revealed ? { inert: "" as unknown as boolean } : {})}
         style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
           paddingTop: isDesktop ? "0.9rem" : "calc(0.9rem + env(safe-area-inset-top, 0px))",
           paddingLeft: "var(--gutter)",
           paddingRight: "var(--gutter)",
           paddingBottom: "3rem",
           background: isDesktop
             ? "linear-gradient(to bottom, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 0%, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 18%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)"
-            : "linear-gradient(to bottom, var(--accent-live, rgb(12, 57, 129)) 0%, var(--accent-live, rgb(12, 57, 129)) 70%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)",
+            : "linear-gradient(to bottom, var(--accent-live, rgb(12, 57, 129)) 0%, var(--accent-live, rgb(12, 57, 129)) 85%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)",
           opacity: revealed ? 1 : 0,
           transform: isDesktop
             ? (revealed ? "translate3d(0, 0, 0)" : "translate3d(0, -100%, 0)")
