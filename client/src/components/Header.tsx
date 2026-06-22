@@ -49,13 +49,20 @@ export default function Header() {
         aria-hidden={!revealed}
         {...(!revealed ? { inert: "" as unknown as boolean } : {})}
         style={{
-          padding: "0.9rem var(--gutter) 5rem",
+          paddingTop: isDesktop ? "0.9rem" : "calc(0.9rem + env(safe-area-inset-top, 0px))",
+          paddingLeft: "var(--gutter)",
+          paddingRight: "var(--gutter)",
+          paddingBottom: "5rem",
           background:
             "linear-gradient(to bottom, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 0%, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 18%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)",
           opacity: revealed ? 1 : 0,
-          transform: revealed ? "translate3d(0, 0, 0)" : "translate3d(0, -100%, 0)",
+          transform: isDesktop
+            ? (revealed ? "translate3d(0, 0, 0)" : "translate3d(0, -100%, 0)")
+            : "none",
           pointerEvents: revealed ? "auto" : "none",
-          transition: "opacity 0.5s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)",
+          transition: isDesktop
+            ? "opacity 0.5s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)"
+            : "opacity 0.5s ease",
         }}
       >
         <div
