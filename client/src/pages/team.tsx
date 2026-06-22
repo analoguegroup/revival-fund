@@ -15,7 +15,7 @@ import hiyaPhoto from "@/assets/images/team/hiya-jain.png";
 import zacPhoto from "@/assets/images/team/zac-hill.jpeg";
 import davidPhoto from "@/assets/images/team/david-lang.jpg";
 import peterPhoto from "@/assets/images/team/peter-wang.webp";
-import cyanotypeMask from "@assets/cyanotype-1_1781635654947.png";
+
 
 const INK = "#1C1B1A";
 const HAIRLINE = "#E2DFD8";
@@ -199,20 +199,8 @@ function SocialLinksInline({ links }: { links: Array<{ icon: ReactNode; href: st
 function PersonPhoto({ photo, name, testId, zoom = 1, offsetX = 0 }: { photo: string; name: string; testId: string; zoom?: number; offsetX?: number }) {
   return (
     <div
-      className="relative flex-shrink-0"
-      style={{
-        width: 96,
-        height: 96,
-        background: "#0c3981",
-        maskImage: `url(${cyanotypeMask})`,
-        maskSize: "cover",
-        maskRepeat: "no-repeat",
-        maskPosition: "center",
-        WebkitMaskImage: `url(${cyanotypeMask})`,
-        WebkitMaskSize: "cover",
-        WebkitMaskRepeat: "no-repeat",
-        WebkitMaskPosition: "center",
-      }}
+      className="relative flex-shrink-0 overflow-hidden"
+      style={{ width: 96, height: 96, background: "#0c3981" }}
     >
       <img
         src={photo}
