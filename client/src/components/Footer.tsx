@@ -12,7 +12,7 @@ export default function Footer() {
         className="flex flex-col gap-12"
         style={{ paddingTop: "6rem", borderTop: "1px solid rgba(34, 40, 56, 0.12)" }}
       >
-        <div className="flex flex-col md:flex-row gap-12 md:gap-16 justify-between items-start">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 justify-between items-start">
           <div className="flex flex-col gap-3 max-w-[34rem]">
             <p className="font-mono text-[0.86rem] tracking-[0.15em] leading-relaxed m-0" style={{ color: "var(--parchment)" }}>
               The Revival Fund is an initiative of{" "}

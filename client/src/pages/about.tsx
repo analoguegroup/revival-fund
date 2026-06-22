@@ -236,7 +236,7 @@ export default function About() {
   const renderHeroText = (isParchment: boolean) => {
     return (
       <h1
-        className="m-0 sm:text-[clamp(2.25rem,6.24vw,70px)] sm:leading-[1.12] text-[clamp(2.1rem,8.4vw,41px)] leading-[1.18]"
+        className="m-0 sm:text-[clamp(1.5rem,4.2vw,3.5rem)] sm:leading-[1.12] text-[clamp(1.25rem,6vw,1.75rem)] leading-[1.22]"
         style={{
           fontFamily: SERIF,
           color: isParchment ? INK : '#EBE8E0',

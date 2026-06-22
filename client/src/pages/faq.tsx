@@ -146,7 +146,7 @@ export function FAQContent({ isEmbedded = false, largeText = false }: { isEmbedd
         className={isEmbedded ? "pb-8 sm:pb-12" : "pt-[max(18vh,150px)] sm:pt-[max(22vh,180px)] pb-[10vh]"} 
       >
         <h1 
-          className="mb-4 sm:mb-6 text-[clamp(1.75rem,10vw,2.75rem)] sm:text-[clamp(1.75rem,8vw,60px)] font-bold uppercase tracking-wider" 
+          className="mb-4 sm:mb-6 text-[clamp(1.4rem,7vw,2rem)] sm:text-[clamp(1.5rem,4.5vw,2.75rem)] font-bold uppercase tracking-wider"
           style={{ fontFamily: "'Mean Hand', cursive", color: INK }}
           data-testid="text-faq-title"
         >
