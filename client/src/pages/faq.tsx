@@ -1,13 +1,20 @@
 import { useState } from "react";
+import { useSEO } from "@/hooks/useSEO";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
-
-const INK = "#1C1B1A";
-const ACCENT = "#0c3981";
-const HAIRLINE = "#E2DFD8";
-const BODY = "rgba(28, 27, 26, 0.82)";
-const MONO = "'Space Mono', monospace";
-const SERIF = "'PT Serif', serif";
+import {
+  EditorialSection,
+  Leader,
+  INK,
+  ACCENT,
+  HAIRLINE,
+  BODY,
+  MUTED,
+  MONO,
+  SERIF,
+  SANS,
+  CrosshairStar,
+} from "@/components/editorial";
 
 type FAQCategory = {
   label: string;
@@ -118,7 +125,7 @@ const faqCategories: FAQCategory[] = [
   },
 ];
 
-export function FAQContent() {
+export function FAQContent({ isEmbedded = false, largeText = false }: { isEmbedded?: boolean; largeText?: boolean }) {
   const [openIndices, setOpenIndices] = useState<Set<string>>(new Set());
 
   const toggleFaq = (key: string) => {
@@ -135,99 +142,124 @@ export function FAQContent() {
 
   return (
     <>
+      <div 
+        className={isEmbedded ? "pb-8 sm:pb-12" : "pt-[max(18vh,150px)] sm:pt-[max(22vh,180px)] pb-[10vh]"} 
+      >
+        <h1 
+          className="mb-4 sm:mb-6 text-[clamp(1.75rem,10vw,2.75rem)] sm:text-[clamp(1.75rem,8vw,60px)] font-bold uppercase tracking-wider" 
+          style={{ fontFamily: "'Mean Hand', cursive", color: INK }}
+          data-testid="text-faq-title"
+        >
+          FrequentLy Asked Questions
+        </h1>
+      </div>
 
-        <div className="pt-[max(18vh,150px)] sm:pt-[max(22vh,180px)] pb-[10vh]" style={{ borderBottom: `1px solid ${HAIRLINE}` }}>
-          <h1 className="mb-4 sm:mb-8 text-[44px] sm:text-[clamp(1.75rem,8vw,60px)]" data-testid="text-faq-title">
-            FrequentLy Asked Questions
-          </h1>
-        </div>
-
-        {faqCategories.map((category) => (
-          <Reveal key={category.label}>
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] lg:grid-cols-[1fr_3fr] gap-6 md:gap-8 mb-24 sm:mb-32">
-              <div className="pt-4" style={{ borderTop: `1px solid ${HAIRLINE}` }}>
-                <h2
-                  className="tb-cap text-[0.8125rem] uppercase tracking-[0.2em] font-normal"
-                  style={{ fontFamily: MONO, color: INK }}
-                  data-testid={`label-faq-${category.label.toLowerCase().replace(/\s+/g, '-')}`}
-                >
-                  {category.label}
-                </h2>
-              </div>
-
-              <div className="pt-4" style={{ borderTop: `1px solid ${HAIRLINE}` }}>
-                {category.items.map((faq, index) => {
-                  const key = `${category.label}-${index}`;
-                  const isOpen = openIndices.has(key);
-                  return (
-                    <div
-                      key={key}
-                      style={{ borderBottom: `1px solid ${HAIRLINE}` }}
-                      className="faq-question-row"
-                    >
-                      <button
-                        type="button"
-                        className={`w-full text-left ${index === 0 ? "pb-5 sm:pb-6" : "py-5 sm:py-6"} cursor-pointer transition-opacity duration-300 hover:opacity-60`}
-                        onClick={() => toggleFaq(key)}
-                        aria-expanded={isOpen}
-                        aria-controls={`faq-answer-${key}`}
-                        data-testid={`button-faq-${category.label.toLowerCase().replace(/\s+/g, '-')}-${index}`}
-                        style={{ color: isOpen ? ACCENT : INK }}
-                      >
-                        <span
-                          className="text-[1.0625rem] sm:text-[1.25rem] leading-snug"
-                          style={{ fontFamily: SERIF }}
-                        >
-                          {faq.question}
-                        </span>
-                      </button>
+      <div className="pt-12 sm:pt-16">
+        {faqCategories.map((category, ci) => {
+          const catNum = String(ci + 1).padStart(2, "0");
+          const slug = category.label.toLowerCase().replace(/\s+/g, "-");
+          return (
+            <Reveal key={category.label}>
+              <EditorialSection
+                num={catNum}
+                title={category.label}
+                testId={`label-faq-${slug}`}
+              >
+                <div className="flex flex-col">
+                  {category.items.map((faq, index) => {
+                    const key = `${category.label}-${index}`;
+                    const answerId = `faq-answer-${slug}-${index}`;
+                    const isOpen = openIndices.has(key);
+                    return (
                       <div
-                        id={`faq-answer-${key}`}
-                        className="overflow-hidden transition-all duration-500 ease-out"
-                        style={{ maxHeight: isOpen ? "600px" : "0" }}
+                        key={key}
+                        className="faq-question-row"
                       >
-                        <p
-                          className="tb-cap text-[1rem] sm:text-[1.0625rem] leading-relaxed max-w-[60ch] pb-6 sm:pb-7"
-                          style={{
-                            color: BODY,
-                            opacity: isOpen ? 1 : 0,
-                            transform: isOpen ? "translateY(0)" : "translateY(10px)",
-                            transition:
-                              "opacity 0.45s ease-out, transform 0.45s ease-out",
-                            transitionDelay: isOpen ? "0.12s" : "0s",
-                          }}
-                          data-testid={`text-faq-answer-${category.label.toLowerCase().replace(/\s+/g, '-')}-${index}`}
+                        <button
+                          type="button"
+                          className={`w-full flex items-baseline text-left ${index === 0 ? "pt-0" : "pt-6 sm:pt-8"} pb-6 sm:pb-8 cursor-pointer`}
+                          onClick={() => toggleFaq(key)}
+                          aria-expanded={isOpen}
+                          aria-controls={answerId}
+                          data-testid={`button-faq-${slug}-${index}`}
                         >
-                          {faq.answer}
-                        </p>
+                          <span className="flex flex-1 items-baseline gap-3 sm:gap-4 min-w-0">
+                            <span
+                              className="text-base sm:text-lg font-bold leading-snug min-w-0 transition-colors duration-300"
+                              style={{ fontFamily: SANS, color: isOpen ? ACCENT : INK }}
+                            >
+                              {faq.question}
+                            </span>
+                            <Leader />
+                            <span
+                              className="shrink-0 text-[0.8125rem] tabular-nums transition-colors duration-300"
+                              style={{ fontFamily: MONO, color: isOpen ? ACCENT : MUTED }}
+                            >
+                              {isOpen ? "\u2212" : "+"}
+                            </span>
+                          </span>
+                        </button>
+                        <div
+                          id={answerId}
+                          style={{
+                              display: "grid",
+                              gridTemplateRows: isOpen ? "1fr" : "0fr",
+                              transition: "grid-template-rows 0.4s ease",
+                          }}
+                        >
+                          <div style={{ overflow: "hidden" }}>
+                            <p
+                              className={`${largeText ? "text-[17.5px] sm:text-[20px]" : "text-sm sm:text-base"} leading-relaxed max-w-[60ch] pb-6 sm:pb-7`}
+                              style={{
+                                fontFamily: SERIF,
+                                color: INK,
+                                opacity: isOpen ? 1 : 0,
+                                transform: isOpen ? "translateY(0)" : "translateY(10px)",
+                                transition:
+                                  "opacity 0.45s ease-out, transform 0.45s ease-out",
+                                transitionDelay: isOpen ? "0.12s" : "0s",
+                              }}
+                              data-testid={`text-faq-answer-${slug}-${index}`}
+                            >
+                              {faq.answer}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </Reveal>
-        ))}
+                    );
+                  })}
+                </div>
+              </EditorialSection>
+            </Reveal>
+          );
+        })}
 
-        <Reveal className="py-12 sm:py-16">
-          <p className="tb-cap text-[1.0625rem] sm:text-[1.125rem] leading-relaxed" style={{ color: BODY }}>
-            If you have more questions, email{" "}
-            <a
-              href="mailto:wendi@analoguegroup.org"
-              className="no-underline body-link"
-            >
-              wendi@analoguegroup.org
-            </a>
-          </p>
-        </Reveal>
+      </div>
     </>
   );
 }
 
 export default function FAQ() {
+  useSEO({
+    title: "Frequently Asked Questions",
+    description: "Find answers to frequently asked questions about The Revival Fund, the application process, eligibility criteria, and intellectual property terms.",
+  });
+
   return (
     <div className="min-h-screen bg-background" style={{ color: INK, fontFamily: SERIF }}>
-      <div className="relative z-[2]" style={{ padding: "0 var(--gutter)" }}>
+      {/* Binder Left Margin Line */}
+      <div 
+        className="absolute left-[30px] sm:left-[60px] top-0 bottom-0 w-[1px] hidden sm:block pointer-events-none z-[3]"
+        style={{
+          borderLeft: `1px dashed ${HAIRLINE}`,
+        }}
+      >
+        <div className="absolute top-[20%] left-[-4px] w-2 h-2 rounded-full border border-slate-300 bg-background" />
+        <div className="absolute top-[50%] left-[-4px] w-2 h-2 rounded-full border border-slate-300 bg-background" />
+        <div className="absolute top-[80%] left-[-4px] w-2 h-2 rounded-full border border-slate-300 bg-background" />
+      </div>
+
+      <div className="relative z-[10] pl-8 sm:pl-24 pr-8 sm:pr-[var(--gutter)]">
         <FAQContent />
       </div>
       <Footer />

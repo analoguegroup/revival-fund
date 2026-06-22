@@ -8,7 +8,8 @@ import About from "@/pages/about";
 import FAQ from "@/pages/faq";
 import Team from "@/pages/team";
 import Apply from "@/pages/apply";
-// import Portfolio from "@/pages/portfolio"; // hidden until portfolios are released
+import Portfolio from "@/pages/portfolio";
+import Grantee from "@/pages/grantee";
 import Projects from "@/pages/projects";
 import Writings from "@/pages/writings";
 import NotFound from "@/pages/not-found";
@@ -18,7 +19,8 @@ function Routes() {
   return (
     <Switch>
       <Route path="/" component={About} />
-      {/* <Route path="/portfolio" component={Portfolio} /> hidden until portfolios are released */}
+      <Route path="/portfolio" component={Portfolio} />
+      <Route path="/portfolio/:slug" component={Grantee} />
       <Route path="/projects" component={Projects} />
       <Route path="/writings" component={Writings} />
       <Route path="/faq" component={FAQ} />
@@ -102,7 +104,8 @@ function Router() {
     const el = contentRef.current;
     const funcA = document.getElementById('grain-threshold');
     const turbulence = document.getElementById('grain-noise');
-    if (!el || !funcA) {
+    if ((window as any).__skipTransition || !el || !funcA) {
+      (window as any).__skipTransition = false;
       setShownPath(targetPath);
       window.scrollTo(0, 0);
       animating.current = false;
@@ -201,6 +204,16 @@ function Router() {
               <feFuncA id="grain-threshold" type="table" tableValues="1 1" />
             </feComponentTransfer>
             <feComposite in="SourceGraphic" in2="mask" operator="in" />
+          </filter>
+          <filter id="hand-drawn" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="37" result="noise" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+            <feColorMatrix in="blur" type="matrix" result="goo"
+              values="1 0 0 0 0
+                      0 1 0 0 0
+                      0 0 1 0 0
+                      0 0 0 14 -6" />
+            <feDisplacementMap in="goo" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
       </svg>

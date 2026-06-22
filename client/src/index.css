@@ -112,14 +112,15 @@
   --destructive-foreground: 0 84% 98%;
   --input: 40 5% 85%;
   --ring: 217 83% 27%;
-  --chart-1: 217 83% 27%;
+  --chart-1: 219 75% 31%;
   --chart-2: 222 38% 55%;
   --chart-3: 222 30% 28%;
   --chart-4: 220 8% 70%;
   --chart-5: 220 8% 80%;
-  --font-sans: 'Crimson Text', serif;
-  --font-serif: 'Crimson Text', serif;
-  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Lato', sans-serif;
+  --font-serif: 'Cardo', serif;
+  --font-mono: 'Lato', sans-serif;
+  --font-lato: 'Lato', sans-serif;
   --font-display: 'Mean Hand', cursive;
   --radius: 0px;
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
@@ -236,30 +237,7 @@
     overflow-x: hidden;
   }
 
-  /* Cyanotype paper: uneven blue wash (mottle) + fine paper grain, site-wide */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 40;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='cyWash'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.009' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.047 0 0 0 0 0.224 0 0 0 0 0.506 0.7 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cyWash)'/%3E%3C/svg%3E");
-    background-size: cover;
-    mix-blend-mode: multiply;
-    opacity: 0.07;
-  }
 
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 40;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='cyGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23cyGrain)'/%3E%3C/svg%3E");
-    background-size: 150px 150px;
-    mix-blend-mode: multiply;
-    opacity: 0.07;
-  }
 
   h1 {
     font-family: var(--font-display);
@@ -276,7 +254,7 @@
   }
 
   h2 {
-    font-family: 'Noto Sans TC', sans-serif;
+    font-family: 'Lato', sans-serif;
     font-weight: 400;
     line-height: 1.1;
     letter-spacing: -0.02em;
@@ -452,7 +430,7 @@
 }
 
 .section-num {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Lato', sans-serif;
   font-size: 0.75rem;
   color: var(--clay);
   letter-spacing: 0.1em;
@@ -556,6 +534,28 @@
 .reading-link:hover .rl-title,
 .reading-link:focus-visible .rl-title {
   font-style: italic;
+}
+
+.read-entry {
+  transition: color 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.read-entry:hover .rl-title,
+.read-entry:focus-visible .rl-title {
+  color: #0c3981;
+}
+
+.read-entry:hover .rl-meta,
+.read-entry:focus-visible .rl-meta {
+  color: #0c3981 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .read-entry,
+  .read-entry .rl-title,
+  .read-entry .rl-meta {
+    transition: none;
+  }
 }
 
 .colophon-link:hover,
@@ -717,8 +717,86 @@
 
 @media (max-width: 639px) {
   .nav-bottom-bar {
-    background: linear-gradient(to top, var(--stone) 55%, transparent 100%);
+    background: linear-gradient(to top, hsl(var(--background)) 55%, transparent 100%);
     padding-top: 2rem;
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
   }
 }
+
+/* Concept B: Technical Blueprint & Interactive Excavation Lens */
+.blueprint-grid {
+  background-color: #0c3981;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 0),
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 10px 10px, 50px 50px, 50px 50px;
+  background-position: center;
+}
+
+@keyframes autoLensMove {
+  0% {
+    clip-path: circle(130px at 20% 35%);
+  }
+  25% {
+    clip-path: circle(130px at 75% 25%);
+  }
+  50% {
+    clip-path: circle(130px at 80% 70%);
+  }
+  75% {
+    clip-path: circle(130px at 30% 65%);
+  }
+  100% {
+    clip-path: circle(130px at 20% 35%);
+  }
+}
+
+.auto-lens-anim {
+  animation: autoLensMove 28s infinite ease-in-out;
+}
+
+/* Smudged/Blur Focus Animation */
+.blur-focus {
+  filter: blur(4px);
+  opacity: 0.55;
+  transition: filter 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  display: inline-block;
+}
+
+.blur-focus.focused {
+  filter: blur(0px);
+  opacity: 1;
+}
+
+/* Unified focus classes for hero text alignment */
+.hero-focus-parchment,
+.hero-focus-blueprint {
+  display: inline-block;
+  transition: filter 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hero-focus-blueprint {
+  filter: blur(4px);
+  opacity: 0.55;
+}
+
+/* Subtle Global Paper Noise Overlay */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.04;
+  background-image: url("/exclusive-paper.png");
+  background-repeat: repeat;
+}
+
+
+
+
+

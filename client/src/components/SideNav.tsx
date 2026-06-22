@@ -14,12 +14,12 @@ const NAV_TREE: Group[] = [
     target: "about",
     path: "/",
     children: [
-      { label: "Team", kind: "scroll", target: "team", path: "/team" },
       { label: "FAQ", kind: "scroll", target: "faq", path: "/faq" },
+      { label: "Team", kind: "scroll", target: "team", path: "/team" },
     ],
   },
   { label: "Projects", kind: "link", href: "/projects" },
-  { label: "Portfolio", kind: "link", href: "/writings" },
+  { label: "PortfoLio", kind: "link", href: "/portfolio" },
 ];
 
 const FLAT: Leaf[] = NAV_TREE.flatMap((item) => [
@@ -46,7 +46,7 @@ export default function SideNav({ revealed = true }: { revealed?: boolean }) {
   // (only on the home route, where About / Team / FAQ are stacked sections).
   useEffect(() => {
     if (location !== "/") return;
-    const ids = ["about", "team", "faq"];
+    const ids = ["about", "faq", "team"];
     let raf = 0;
     const compute = () => {
       raf = 0;

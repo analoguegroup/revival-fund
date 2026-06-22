@@ -233,20 +233,20 @@ export default function Hero() {
               About
             </Link>
             <Link
-              href="/faq"
-              className="font-mono text-[0.75rem] uppercase tracking-[0.15em] no-underline nav-link"
-              style={{ color: "var(--parchment)", opacity: 0.6 }}
-              data-testid="link-faq"
-            >
-              FAQ
-            </Link>
-            <Link
               href="/team"
               className="font-mono text-[0.75rem] uppercase tracking-[0.15em] no-underline nav-link"
               style={{ color: "var(--parchment)", opacity: 0.6 }}
               data-testid="link-team"
             >
               Team
+            </Link>
+            <Link
+              href="/faq"
+              className="font-mono text-[0.75rem] uppercase tracking-[0.15em] no-underline nav-link"
+              style={{ color: "var(--parchment)", opacity: 0.6 }}
+              data-testid="link-faq"
+            >
+              FAQ
             </Link>
           </div>
           <a

@@ -12,6 +12,7 @@ type RevealProps = {
   className?: string;
   style?: CSSProperties;
   children: ReactNode;
+  alwaysAnimate?: boolean;
   "data-testid"?: string;
 };
 
@@ -20,6 +21,7 @@ export default function Reveal({
   className = "",
   style,
   children,
+  alwaysAnimate = false,
   ...rest
 }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
@@ -39,10 +41,12 @@ export default function Reveal({
     }
 
     // Already intersecting the viewport on mount: show right away, no scroll reveal.
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      setRevealed(true);
-      return;
+    if (!alwaysAnimate) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        setRevealed(true);
+        return;
+      }
     }
 
     const obs = new IntersectionObserver(
@@ -56,7 +60,7 @@ export default function Reveal({
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, [alwaysAnimate]);
 
   return (
     <Tag

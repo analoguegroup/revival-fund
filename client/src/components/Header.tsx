@@ -61,7 +61,7 @@ export default function Header() {
             style={{ color: "#f5f6f8", fontFamily: "var(--font-display)" }}
             data-testid="link-home"
           >
-            The RevivaL Fund
+            {"The\u00a0\u00a0\u00a0\u00a0RevivaL\u00a0\u00a0\u00a0\u00a0Fund"}
           </Link>
         </div>
       </header>

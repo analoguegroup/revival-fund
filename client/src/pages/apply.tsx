@@ -1,5 +1,12 @@
 
+import { useSEO } from "@/hooks/useSEO";
+
 export default function Apply() {
+  useSEO({
+    title: "Apply for Funding",
+    description: "Submit a quest to revive a dormant or forgotten scientific research path. Applications are open to both academic and independent scholars.",
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main className="container mx-auto px-6 pt-32 pb-20">

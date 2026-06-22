@@ -17,11 +17,69 @@
 - **Body**: text-base to text-lg, font-normal, leading-relaxed
 - **Small Text**: text-sm for captions, metadata
 
-## Layout System
-**Spacing Primitives**: Tailwind units of 4, 6, 8, 12, 16, 20, 24
-- Consistent section padding: py-20 to py-32 (desktop), py-12 to py-16 (mobile)
-- Container max-width: max-w-7xl for sections, max-w-4xl for text-heavy content
-- Grid gaps: gap-8 for card layouts, gap-12 for major sections
+## Layout & Spacing System
+The layout system uses a highly structured responsive spacing hierarchy based on the TNI (The New Institute) design grid. All major page components (blocks) are contained, stacked, and padded using responsive viewport-relative (`vw`) and `rem`-based variables.
+
+### 1. Responsive Screen Gutters (Horizontal Container Paddings)
+Gutters frame the main content containers and expand fluidly to provide adequate whitespace on larger viewports.
+* **Mobile / Small Screens (< 768px)**: `2rem` (32px) gutter — `px-8` in Tailwind.
+* **Tablets / Medium Screens (768px - 1024px)**: `5rem` (80px) gutter — `md:px-20` in Tailwind.
+* **Laptops / Large Screens (1024px - 1280px)**: `7rem` (112px) gutter — `lg:px-28` in Tailwind.
+* **Desktops / Widescreens (>= 1280px)**: `10rem` (160px) gutter — `xl:px-40` in Tailwind.
+* **Container Boundaries (Max-Width)**:
+  * Standard Content Block: `max-w-[128rem]` (2048px)
+  * Widescreen Block / Header Line: `max-w-[138rem]` (2208px)
+  * Extra-Wide Grid Container: `max-w-[168rem]` (2688px)
+
+### 2. Vertical Block Stacking (Margins)
+Spacing between consecutive sections/blocks (`.tni-block + .tni-block`) is generous to establish page pacing.
+* **Standard Block Gap**:
+  * *Mobile*: `5rem` (80px) top margin — `mt-20` in Tailwind.
+  * *Desktop*: `10rem` (160px) top margin — `md:mt-40` in Tailwind.
+* **First Block / Hero Clearance** (to account for the sticky header):
+  * *Mobile*: `13rem` (208px) top margin — `mt-[13rem]` in Tailwind.
+  * *Desktop*: `16.5rem` (264px) top margin — `md:mt-[16.5rem]` in Tailwind.
+* **Hero Block Bottom Space**:
+  * *Mobile*: `3rem` (48px) bottom margin — `mb-12` in Tailwind.
+  * *Desktop*: `5rem` (80px) bottom margin — `md:mb-20` in Tailwind.
+
+### 3. Fluid Vertical Paddings (Viewport-Relative with Caps)
+Sections apply top and bottom padding based on three sizing presets. These scale with viewport width (`vw`) but are capped at hard `rem` limits to keep layout heights proportional on ultra-wide monitors.
+* **Small Space (`SmallSpace`)**:
+  * *Mobile*: `6vw` vertical padding — `py-[6vw]`
+  * *Desktop*: `3vw` vertical padding — `md:py-[3vw]`
+  * *Clamping Limit*: Maximum `5rem` (80px) — `max-py-[5rem]`
+* **Medium Space (`MediumSpace`)**:
+  * *Mobile*: `9vw` vertical padding — `py-[9vw]`
+  * *Desktop*: `4.8vw` to `6vw` vertical padding — `md:py-[4.8vw]` or `md:py-[6vw]`
+  * *Clamping Limit*: Maximum `10rem` (160px) — `max-py-[10rem]`
+* **Large Space (`LargeSpace`)**:
+  * *Mobile*: `15vw` vertical padding — `py-[15vw]`
+  * *Desktop*: `9vw` to `9.7vw` vertical padding — `md:py-[9vw]` or `md:py-[9.7vw]`
+  * *Clamping Limit*: Maximum `15rem` (240px) — `max-py-[15rem]`
+* **No Space (`NoSpace`)**: `0` padding — `py-0`
+
+### 4. Proportional Grid Columns & Gutters
+Columns inside grids adjust their gutter spacing based on screen size, ensuring gaps perfectly complement the external page container gutters. Gaps are subtracted directly from column percentages:
+$$\text{Column Width} = \frac{\text{Span}}{12} \times 100\% - \text{Gutter}$$
+
+Where the **Gutter Offset** scales as:
+* **Small viewports**: `1rem` offset (total gap `2rem` / 32px) — `gap-8` (equivalent)
+  * *Width Example (2-Col)*: `w-[calc(50%-1rem)]`
+* **Medium viewports**: `3rem` offset (total gap `6rem` / 96px) — `gap-24` (equivalent)
+  * *Width Example (2-Col)*: `md:w-[calc(50%-3rem)]`
+* **Large viewports**: `5rem` offset (total gap `10rem` / 160px) — `gap-40` (equivalent)
+  * *Width Example (2-Col)*: `lg:w-[calc(50%-5rem)]`
+
+### 5. Profile-Specific Spacing & Layout Structure
+* **Profile Hero Section (`tni-block--newProfileHero`)**:
+  * Utilizes `topMediumSpace` and `bottomLargeSpace` padding rules.
+  * Splitted on desktop into two columns separated by standard grid gutters:
+    * *Left column (Media Container)*: Holds a vertical member portrait (height ratio `~149.8%` relative to width).
+    * *Right column (Metadata)*: Contains breadcrumb category path, name, linked programs, horizontal rules (`<hr />`), and affiliation details.
+* **Standard Member Text/Bio Block (`tni-block--newTextBlock`)**:
+  * Utilizes `topNoSpace` and `bottomMediumSpace` (or `bottomLargeSpace` for publications/extended lists).
+  * Structure consists of a sidebar header column (holding label headings such as `BIO`, `RESIDENCY`, `PUBLICATIONS` in uppercase tracking-widest text) on the left/top, and the main text wrapper stack on the right/bottom, separated by standard grid gutters. Links within lists are divided by clean `<hr />` elements.
 
 ## Color Treatment
 Dark theme foundation throughout with high contrast text. No specific color values defined - implementation will handle palette.

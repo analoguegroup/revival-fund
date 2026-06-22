@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
+import { useSEO } from "@/hooks/useSEO";
 
 const writings = [
   {
@@ -25,6 +26,11 @@ const writings = [
 ];
 
 export default function Writings() {
+  useSEO({
+    title: "Essays & Publications",
+    description: "Read essays, articles, and publications supported by The Revival Fund covering forgotten wartime antimalarial drug discoveries and the migration of the British dye empire.",
+  });
+
   return (
     <div className="min-h-screen text-foreground bg-background">
       <div className="relative z-[2]" style={{ padding: "0 var(--gutter)" }}>

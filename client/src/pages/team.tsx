@@ -1,4 +1,6 @@
 import { type ReactNode, useEffect, useRef, useCallback } from "react";
+import { useSEO } from "@/hooks/useSEO";
+import { EditorialSection, SectionHead, Leader, ACCENT, SANS, CrosshairStar } from "@/components/editorial";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import { Globe, Linkedin } from "lucide-react";
@@ -13,12 +15,13 @@ import hiyaPhoto from "@/assets/images/team/hiya-jain.png";
 import zacPhoto from "@/assets/images/team/zac-hill.jpeg";
 import davidPhoto from "@/assets/images/team/david-lang.jpg";
 import peterPhoto from "@/assets/images/team/peter-wang.webp";
+import cyanotypeMask from "@assets/cyanotype-1_1781635654947.png";
 
 const INK = "#1C1B1A";
 const HAIRLINE = "#E2DFD8";
 const BODY = "rgba(28, 27, 26, 0.82)";
-const MONO = "'Space Mono', monospace";
-const SERIF = "'PT Serif', serif";
+const MONO = "'Lato', sans-serif";
+const SERIF = "'Cardo', serif";
 
 const PATRON_FILTER_ID = "patron-patina-noise";
 const PATRON_FILTER_REVEAL_ID = "patron-patina-reveal";
@@ -172,9 +175,9 @@ function PatronSVGFilters() {
   );
 }
 
-function SocialLinks({ links }: { links: Array<{ icon: ReactNode; href: string; label: string }> }) {
+function SocialLinksInline({ links }: { links: Array<{ icon: ReactNode; href: string; label: string }> }) {
   return (
-    <div className="flex items-center gap-4 mt-4">
+    <div className="flex items-center gap-4 pt-1">
       {links.map((link) => (
         <a
           key={link.label}
@@ -182,7 +185,7 @@ function SocialLinks({ links }: { links: Array<{ icon: ReactNode; href: string; 
           target="_blank"
           rel="noopener noreferrer"
           className="transition-colors footer-link"
-          style={{ color: "var(--clay)" }}
+          style={{ color: BODY, opacity: 0.5 }}
           aria-label={link.label}
           data-testid={`link-social-${link.label.toLowerCase().replace(/\s/g, '-')}`}
         >
@@ -193,67 +196,47 @@ function SocialLinks({ links }: { links: Array<{ icon: ReactNode; href: string; 
   );
 }
 
-function AdvisorLedgerRow({ refCode, name, title, bio, links, testId, photo }: {
-  refCode: string;
-  name: string;
-  title: string;
-  bio: string;
-  links?: Array<{ icon: ReactNode; href: string; label: string }>;
-  testId: string;
-  photo?: string;
-}) {
+function PersonPhoto({ photo, name, testId, zoom = 1, offsetX = 0 }: { photo: string; name: string; testId: string; zoom?: number; offsetX?: number }) {
   return (
-    <article
-      className="flex gap-5 sm:gap-6 py-6"
-      style={{ borderBottom: `1px solid ${HAIRLINE}` }}
+    <div
+      className="relative flex-shrink-0"
+      style={{
+        width: 96,
+        height: 96,
+        background: "#0c3981",
+        maskImage: `url(${cyanotypeMask})`,
+        maskSize: "cover",
+        maskRepeat: "no-repeat",
+        maskPosition: "center",
+        WebkitMaskImage: `url(${cyanotypeMask})`,
+        WebkitMaskSize: "cover",
+        WebkitMaskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+      }}
     >
-      <div className="shrink-0 w-16 text-center">
-        <span
-          className="block mb-2.5 text-[0.625rem] tracking-[0.1em]"
-          style={{ fontFamily: MONO, color: "var(--accent-live, rgb(12, 57, 129))" }}
-          data-testid={`text-ref-${testId}`}
-        >
-          {refCode}
-        </span>
-        {photo && (
-          <img
-            src={photo}
-            alt={name}
-            className="w-16 h-16 object-cover"
-            style={{ filter: "grayscale(100%)", border: "1px solid rgba(34, 40, 56, 0.14)" }}
-            data-testid={`img-advisor-${testId}`}
-          />
-        )}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-baseline justify-between gap-3 flex-wrap">
-          <h3 className="text-[1.2rem] leading-tight font-bold" style={{ fontFamily: SERIF }} data-testid={testId}>
-            {name}
-          </h3>
-          <span
-            className="text-[0.625rem] uppercase tracking-[0.1em]"
-            style={{ fontFamily: MONO, color: "var(--clay)" }}
-          >
-            {title}
-          </span>
-        </div>
-        <p
-          className="text-[1.0625rem] sm:text-lg leading-relaxed mt-3"
-          style={{ color: BODY }}
-          data-testid={`text-bio-${testId}`}
-        >
-          {bio}
-        </p>
-        {links && links.length > 0 && <SocialLinks links={links} />}
-      </div>
-    </article>
+      <img
+        src={photo}
+        alt={name}
+        className="w-full h-full object-cover object-top"
+        style={{
+          filter: "grayscale(100%) brightness(1.15) contrast(0.9)",
+          mixBlendMode: "screen" as const,
+          transform: (zoom !== 1 || offsetX !== 0) ? `scale(${zoom}) translateX(${offsetX}%)` : undefined,
+          transformOrigin: "center top",
+        }}
+        data-testid={`img-${testId}`}
+      />
+    </div>
   );
 }
+
 
 const TEAM: Array<{
   name: string;
   title: string;
   photo: string;
+  photoZoom?: number;
+  photoOffsetX?: number;
   bio: string;
   testId: string;
   links: Array<{ icon: ReactNode; href: string; label: string }>;
@@ -290,6 +273,8 @@ const ADVISORS: Array<{
   name: string;
   title: string;
   photo: string;
+  photoZoom?: number;
+  photoOffsetX?: number;
   bio: string;
   testId: string;
   links: Array<{ icon: ReactNode; href: string; label: string }>;
@@ -386,127 +371,166 @@ const ADVISORS: Array<{
   },
 ];
 
-function TeamGrid() {
+type PersonData = typeof TEAM[number];
+
+function PersonSection({
+  num,
+  title,
+  testId,
+  people,
+  largeText = false,
+}: {
+  num: string;
+  title: string;
+  testId?: string;
+  people: PersonData[];
+  largeText?: boolean;
+}) {
+  const GRID = "grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-x-10 lg:gap-x-14";
   return (
-    <div>
-      {TEAM.map((a, i) => (
-        <Reveal key={a.testId}>
-          <AdvisorLedgerRow
-            refCode={`RF\u00B7T\u00B7${String(i + 1).padStart(2, "0")}`}
-            name={a.name}
-            title={a.title}
-            photo={a.photo}
-            bio={a.bio}
-            testId={a.testId}
-            links={a.links}
-          />
+    <div className="mb-28 sm:mb-40">
+      {/* Section header row */}
+      <div className={`${GRID} relative mb-6 md:mb-0`}>
+        {/* Curved Star Crosshair at the intersection on desktop */}
+        <CrosshairStar className="absolute top-0 left-[-36px] -translate-x-1/2 -translate-y-1/2 hidden sm:block pointer-events-none" />
+
+        <div className="pt-4 animate-none" style={{ borderTop: `1px dashed ${HAIRLINE}` }}>
+          <SectionHead num={num} title={title} testId={testId} />
+        </div>
+        <div className="pt-4 hidden md:block" style={{ borderTop: `1px dashed ${HAIRLINE}` }} />
+      </div>
+      {/* Per-person rows — split into two grid rows so photo top = bio top */}
+      {people.map((person, i) => (
+        <Reveal key={person.testId}>
+          {/* Row 1: name + role (left cell empty) */}
+          <div className={GRID}>
+            <div className="hidden md:block" />
+            <div className={`flex flex-col gap-y-2 ${i === 0 ? "pt-0" : "pt-7 sm:pt-9"}`} data-testid={person.testId}>
+              <div className="flex items-baseline gap-3 sm:gap-4 min-w-0">
+                <h3
+                  className="text-lg sm:text-xl font-bold uppercase tracking-wider transition-colors duration-300"
+                  style={{ fontFamily: SANS, color: ACCENT }}
+                >
+                  {person.name}
+                </h3>
+                <span className="hidden sm:inline-flex flex-1" aria-hidden="true">
+                  <Leader />
+                </span>
+              </div>
+              <p
+                className="text-[0.75rem] uppercase tracking-[0.12em]"
+                style={{ fontFamily: MONO, color: "rgba(28,27,26,0.55)" }}
+              >
+                {person.title}
+              </p>
+            </div>
+          </div>
+          {/* Row 2: photo (left) + bio + links (right) — tops aligned */}
+          <div className={`${GRID} items-start mt-4 sm:mt-6`}>
+            <div className="hidden md:flex justify-start">
+              <PersonPhoto
+                photo={person.photo}
+                name={person.name}
+                testId={person.testId}
+                zoom={person.photoZoom}
+                offsetX={person.photoOffsetX}
+              />
+            </div>
+            <div className="flex flex-col gap-y-3 pb-7 sm:pb-9">
+              <p
+                className={`${largeText ? "text-[17.5px] sm:text-[20px]" : "text-sm sm:text-base"} leading-relaxed`}
+                style={{ fontFamily: SERIF, color: INK }}
+                data-testid={`text-bio-${person.testId}`}
+              >
+                {person.bio}
+              </p>
+              {person.links.length > 0 && <SocialLinksInline links={person.links} />}
+            </div>
+          </div>
         </Reveal>
       ))}
     </div>
   );
 }
 
-function AdvisoryGrid() {
-  return (
-    <div>
-      {ADVISORS.map((a, i) => (
-        <Reveal key={a.testId}>
-          <AdvisorLedgerRow
-            refCode={`RF\u00B7A\u00B7${String(i + 1).padStart(2, "0")}`}
-            name={a.name}
-            title={a.title}
-            photo={a.photo}
-            bio={a.bio}
-            testId={a.testId}
-            links={a.links}
-          />
-        </Reveal>
-      ))}
-    </div>
-  );
-}
-
-export function TeamContent() {
+export function TeamContent({ isEmbedded = false, largeText = false }: { isEmbedded?: boolean; largeText?: boolean }) {
   return (
     <>
+      {/* Page display title */}
+      <h1
+        className={isEmbedded ? "text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.05] mb-10 sm:mb-14" : "text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.05] mb-16 sm:mb-24"}
+        style={{ fontFamily: "'Mean Hand', cursive", color: INK }}
+        data-testid="text-team-page-title"
+      >
+        Team
+      </h1>
 
-        <section style={{ borderBottom: `1px solid ${HAIRLINE}` }} className="pt-12 sm:pt-16 pb-10 sm:pb-[60px] flex flex-col items-center text-center">
-          <PatronSVGFilters />
-          <div className="w-full max-w-[1100px]">
-            <div className="flex items-center gap-4 mb-12">
-              <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(34, 40, 56, 0.5))" }} />
-              <span className="text-[0.6875rem] tracking-[0.2em] uppercase" style={{ fontFamily: MONO, color: INK, opacity: 0.6 }}>This work is only possible due to generous support from the following patrons</span>
-              <div className="flex-1 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(34, 40, 56, 0.5))" }} />
-            </div>
-            <div className="flex flex-row flex-wrap justify-center items-start gap-x-16 gap-y-0 sm:gap-y-10">
-              <div className="flex flex-col items-center gap-4" data-testid="text-patron-peter-wang">
-                <p className="text-[1.5rem] sm:text-[1.75rem] font-normal tracking-[0.04em] leading-snug" style={{ fontFamily: "'Cardo', serif", color: "var(--gold)" }}>
+      {/* Patron acknowledgment */}
+      <div className="mb-28 sm:mb-40 pt-4 relative" style={{ borderTop: `1px dashed ${HAIRLINE}` }}>
+        <CrosshairStar className="absolute top-0 left-[-36px] -translate-x-1/2 -translate-y-1/2 hidden sm:block pointer-events-none" />
+        <PatronSVGFilters />
+        <div
+          className="grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-6 md:gap-10 lg:gap-14"
+        >
+          <div>
+            <SectionHead num="01" title="Patrons" testId="text-team-patrons-label" />
+          </div>
+          <div className="flex flex-col gap-y-4 pt-0">
+            <Reveal>
+              <div data-testid="text-patron-peter-wang">
+                <p className="text-[1.375rem] sm:text-[1.625rem] font-normal tracking-[0.03em]" style={{ fontFamily: "'Cardo', serif", color: "var(--gold)" }}>
                   <BronzePatronName text="Peter Wang" />
                 </p>
               </div>
-
-              <a href="https://goodscienceproject.org/" target="_blank" rel="noopener noreferrer" className="no-underline flex flex-col items-center gap-4" data-testid="text-patron-good-science">
-                <p className="text-[1.5rem] sm:text-[1.75rem] font-normal tracking-[0.04em] leading-snug" style={{ fontFamily: "'Cardo', serif", color: "var(--gold)" }}>
+            </Reveal>
+            <Reveal>
+              <a href="https://goodscienceproject.org/" target="_blank" rel="noopener noreferrer" className="no-underline" data-testid="text-patron-good-science">
+                <p className="text-[1.375rem] sm:text-[1.625rem] font-normal tracking-[0.03em]" style={{ fontFamily: "'Cardo', serif", color: "var(--gold)" }}>
                   <BronzePatronName text="Good Science Project" />
                 </p>
               </a>
-
-              <div className="flex flex-col items-center gap-4" data-testid="text-patron-noticing-foundation">
-                <p className="text-[1.5rem] sm:text-[1.75rem] font-normal tracking-[0.04em] leading-snug" style={{ fontFamily: "'Cardo', serif", color: "var(--gold)" }}>
+            </Reveal>
+            <Reveal>
+              <div data-testid="text-patron-noticing-foundation">
+                <p className="text-[1.375rem] sm:text-[1.625rem] font-normal tracking-[0.03em]" style={{ fontFamily: "'Cardo', serif", color: "var(--gold)" }}>
                   <BronzePatronName text="Noticing Foundation" />
                 </p>
               </div>
-            </div>
+            </Reveal>
           </div>
-        </section>
+        </div>
+      </div>
 
-        <div className="pt-[8vh] sm:pt-[10vh]" />
+      {/* Team */}
+      <PersonSection num="02" title="Team" testId="text-team-founding" people={TEAM} largeText={largeText} />
 
-        <Reveal>
-        <section
-          style={{ borderBottom: `1px solid ${HAIRLINE}` }}
-          className="py-12 sm:py-[80px]">
-          <div
-            className="flex items-baseline justify-between gap-4 flex-wrap pb-3.5 mb-1.5"
-            style={{ borderBottom: `2px solid ${INK}` }}
-          >
-            <h2 className="tb-cap text-[0.8125rem] uppercase tracking-[0.2em] font-bold" style={{ fontFamily: MONO, color: INK }} data-testid="text-team-founding">
-              Team
-            </h2>
-          </div>
-
-          <div>
-            <TeamGrid />
-          </div>
-        </section>
-        </Reveal>
-
-        <Reveal>
-        <section
-          style={{ borderBottom: `1px solid ${HAIRLINE}` }}
-          className="py-12 sm:py-[80px]">
-          <div
-            className="flex items-baseline justify-between gap-4 flex-wrap pb-3.5 mb-1.5"
-            style={{ borderBottom: `2px solid ${INK}` }}
-          >
-            <h2 className="tb-cap text-[0.8125rem] uppercase tracking-[0.2em] font-bold" style={{ fontFamily: MONO, color: INK }} data-testid="text-team-advisory">
-              Advisory Committee
-            </h2>
-          </div>
-
-          <div>
-            <AdvisoryGrid />
-          </div>
-        </section>
-        </Reveal>
+      {/* Advisory Committee */}
+      <PersonSection num="03" title="Advisory Committee" testId="text-team-advisory" people={ADVISORS} largeText={largeText} />
     </>
   );
 }
 
 export default function Team() {
+  useSEO({
+    title: "Team & Advisors",
+    description: "Meet the founding team, directors, and advisory committee behind The Revival Fund who help evaluate and publish the excavations of dormant scientific research.",
+  });
+
   return (
     <div className="min-h-screen bg-background" style={{ color: INK, fontFamily: SERIF }}>
-      <div className="relative z-[2]" style={{ paddingLeft: "var(--gutter)", paddingRight: "var(--gutter)", paddingTop: "max(14vh, 120px)" }}>
+      {/* Binder Left Margin Line */}
+      <div 
+        className="absolute left-[30px] sm:left-[60px] top-0 bottom-0 w-[1px] hidden sm:block pointer-events-none z-[3]"
+        style={{
+          borderLeft: `1px dashed ${HAIRLINE}`,
+        }}
+      >
+        <div className="absolute top-[20%] left-[-4px] w-2 h-2 rounded-full border border-slate-300 bg-background" />
+        <div className="absolute top-[50%] left-[-4px] w-2 h-2 rounded-full border border-slate-300 bg-background" />
+        <div className="absolute top-[80%] left-[-4px] w-2 h-2 rounded-full border border-slate-300 bg-background" />
+      </div>
+
+      <div className="relative z-[10] pl-8 sm:pl-24 pr-8 sm:pr-[var(--gutter)] pt-[max(14vh,120px)]">
         <TeamContent />
       </div>
       <Footer />

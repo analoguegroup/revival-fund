@@ -1,0 +1,9 @@
+node_modules
+dist
+screenshots
+main.py
+pyproject.toml
+uv.lock
+artifacts
+design_guidelines.md
+replit.md
