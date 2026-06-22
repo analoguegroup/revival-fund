@@ -53,8 +53,9 @@ export default function Header({ isTransitioning = false }: { isTransitioning?: 
           paddingLeft: "var(--gutter)",
           paddingRight: "var(--gutter)",
           paddingBottom: "3rem",
-          background:
-            "linear-gradient(to bottom, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 0%, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 18%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)",
+          background: isDesktop
+            ? "linear-gradient(to bottom, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 0%, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 18%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)"
+            : "linear-gradient(to bottom, var(--accent-live, rgb(12, 57, 129)) 0%, var(--accent-live, rgb(12, 57, 129)) 70%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)",
           opacity: revealed ? 1 : 0,
           transform: isDesktop
             ? (revealed ? "translate3d(0, 0, 0)" : "translate3d(0, -100%, 0)")
