@@ -22,6 +22,12 @@ export interface Bio {
   links?: LinkInfo[];
 }
 
+export interface ProjectUpdate {
+  date: string;
+  title: string;
+  url?: string;
+}
+
 export interface Grantee {
   slug: string;
   names: string;
@@ -36,6 +42,7 @@ export interface Grantee {
   themes: string[];
   /** Copy not yet finalised by the grantee — provisional placeholder text. */
   provisional?: boolean;
+  updates?: ProjectUpdate[];
 }
 
 export const TYPE_LABELS: Record<GranteeType, string> = {
@@ -254,6 +261,13 @@ export const grantees: Grantee[] = [
       },
     ],
     themes: ["Archives", "Translation", "Soviet", "AI", "Corpus"],
+    updates: [
+      {
+        date: "June 23, 2026",
+        title: "Sovietrxiv.org launched",
+        url: "https://sovietrxiv.org/"
+      }
+    ],
   },
 ];
 

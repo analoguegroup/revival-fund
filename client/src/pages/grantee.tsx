@@ -416,6 +416,53 @@ export default function Grantee() {
             </section>
           </div>
 
+          {/* Right Column: Project Updates (Row 1) */}
+          {grantee.updates && grantee.updates.length > 0 && (
+            <div className="md:col-start-3 md:col-span-1 md:row-start-1 self-start">
+              <section data-testid="section-updates" className="relative">
+                <div className="flex items-baseline justify-between gap-3 sm:gap-4 mb-6">
+                  <h2
+                    className="text-[0.75rem] uppercase tracking-[0.12em]"
+                    style={{ fontFamily: MONO, color: INK }}
+                  >
+                    Updates
+                  </h2>
+                  <Leader />
+                </div>
+                <div className="flex flex-col gap-5">
+                  {grantee.updates.map((update, i) => (
+                    <Reveal key={i} className="flex flex-col gap-1 pb-4 border-b border-dashed border-slate-200 dark:border-slate-800 last:border-0 last:pb-0">
+                      <span
+                        className="text-[0.75rem] tracking-[0.12em] tabular-nums"
+                        style={{ fontFamily: MONO, color: ACCENT }}
+                      >
+                        {update.date}
+                      </span>
+                      {update.url ? (
+                        <a
+                          href={update.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[1.094rem] leading-normal transition-colors duration-300 hover:text-[#0c3981] inline-block font-medium"
+                          style={{ fontFamily: SANS, color: BODY, borderBottom: `1.5px solid ${HAIRLINE}`, width: "fit-content" }}
+                        >
+                          {update.title}
+                        </a>
+                      ) : (
+                        <span
+                          className="text-[1.094rem] leading-normal"
+                          style={{ fontFamily: SANS, color: BODY }}
+                        >
+                          {update.title}
+                        </span>
+                      )}
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            </div>
+          )}
+
           {/* Biographies Section Header (Row 2) */}
           {grantee.bios.length > 0 && (
             <div className="md:col-start-2 md:col-span-1 mt-8">
