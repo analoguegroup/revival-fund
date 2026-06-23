@@ -56,10 +56,12 @@ export default function Header({ isTransitioning = false }: { isTransitioning?: 
           paddingTop: isDesktop ? "0.9rem" : "calc(0.9rem + env(safe-area-inset-top, 0px))",
           paddingLeft: "var(--gutter)",
           paddingRight: "var(--gutter)",
-          paddingBottom: "3rem",
+          paddingBottom: isDesktop ? "3rem" : "1.6rem",
           background: isDesktop
             ? "linear-gradient(to bottom, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 0%, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 18%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)"
-            : "linear-gradient(to bottom, var(--accent-live, rgb(12, 57, 129)) 0%, var(--accent-live, rgb(12, 57, 129)) 85%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)",
+            : "linear-gradient(to bottom, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 0%, var(--accent-live-translucent, rgba(12, 57, 129, 0.78)) 35%, var(--accent-live-transparent, rgba(12, 57, 129, 0)) 100%)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
           opacity: revealed ? 1 : 0,
           transform: isDesktop
             ? (revealed ? "translate3d(0, 0, 0)" : "translate3d(0, -100%, 0)")
