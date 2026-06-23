@@ -74,7 +74,7 @@ function GranteePlateCard({
       className="relative w-full"
       style={{
         zIndex: isHovered ? 50 : index + 10,
-        marginTop: index === 0 ? "0px" : "-36px",
+        marginTop: index === 0 ? "0px" : "-20px",
       }}
     >
       <Reveal className="reveal-card relative w-full" alwaysAnimate={true}>
@@ -145,8 +145,8 @@ function GranteePlateCard({
         onMouseLeave={handleMouseLeave}
         data-testid={`link-grantee-${grantee.slug}`}
       >
-        <div 
-          className="w-full py-10 px-6 sm:py-14 sm:px-10 border border-dashed rounded-sm transition-all duration-300 relative"
+        <div
+          className="w-full py-14 px-6 sm:py-20 sm:px-12 border border-dashed rounded-sm transition-all duration-300 relative"
           style={{ 
             borderColor: isHovered 
               ? (isDark ? "rgba(255, 255, 255, 0.6)" : ACCENT) 
@@ -198,14 +198,14 @@ function GranteePlateCard({
           </div>
 
           {/* Card Body: Split grid column layout */}
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_300px_130px] gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px_130px] gap-12 items-start">
             {/* Left Column: Title and oneLiner */}
             <div className="flex flex-col gap-10">
               <h3
                 className="text-lg sm:text-xl font-bold uppercase tracking-wider transition-colors duration-300 m-0"
                 style={{ 
                   fontFamily: SANS, 
-                  color: isHovered ? (isDark ? "rgb(255, 255, 255)" : ACCENT) : (isDark ? "rgba(255, 255, 255, 0.95)" : "rgb(15, 23, 42)") 
+                  color: isHovered ? (isDark ? "rgb(255, 255, 255)" : ACCENT) : (isDark ? "rgba(255, 255, 255, 0.95)" : "rgb(30, 58, 95)") 
                 }}
                 data-testid={`text-grantee-title-${grantee.slug}`}
               >
@@ -241,7 +241,7 @@ function GranteePlateCard({
             </div>
 
             {/* Right Column: Specimen Reticle Observatory */}
-            <div className="hidden md:flex shrink-0 items-center justify-end select-none relative">
+            <div className="hidden lg:flex shrink-0 items-center justify-center select-none relative self-center">
               <div
                 className="relative w-32 h-32 rounded-full border border-dashed flex items-center justify-center overflow-hidden transition-all duration-300 ease-out"
                 style={{
@@ -315,12 +315,10 @@ export default function Portfolio() {
       >
         {/* Page header */}
         <div
-          className="pt-[max(18vh,150px)] sm:pt-[max(22vh,180px)] pb-[6vh]"
-          style={{ borderBottom: `1.5px solid ${HAIRLINE}` }}
+          className="pt-[max(12vh,86px)] sm:pt-[max(22vh,180px)] pb-[4vh] sm:pb-[6vh]"
         >
-
           <h1
-            className="text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.05]"
+            className="text-[clamp(1.6rem,8vw,4.5rem)] leading-[1.05]"
             style={{ fontFamily: "var(--font-display)", color: INK }}
             data-testid="text-portfolio-title"
           >
@@ -330,7 +328,7 @@ export default function Portfolio() {
 
         <div className="relative">
           {/* Binder Left Margin Line */}
-          <div 
+          <div
             className="absolute left-[-2px] sm:left-[16px] top-0 bottom-0 w-[1px] hidden sm:block pointer-events-none z-[3]"
             style={{
               borderLeft: `1px dashed ${HAIRLINE}`,
@@ -339,7 +337,7 @@ export default function Portfolio() {
 
           {/* Toggle Row */}
         <div
-          className="pt-8 pb-8 text-base sm:text-lg text-slate-600 font-serif flex flex-col md:flex-row md:items-center justify-end gap-6"
+          className="pt-4 pb-4 sm:pt-8 sm:pb-8 text-base sm:text-lg text-slate-600 font-serif flex flex-col md:flex-row md:items-center justify-end gap-6"
           style={{ fontFamily: SERIF }}
         >
           {/* Telemetry style View Toggle */}
@@ -373,10 +371,10 @@ export default function Portfolio() {
         {viewMode === "timeline" ? (
           <div className="pt-4 pb-20 flex flex-col max-w-6xl sm:pl-24">
             {chronoSorted.map((grantee, i) => (
-              <GranteePlateCard 
+              <GranteePlateCard
                 key={grantee.slug}
-                grantee={grantee} 
-                index={i} 
+                grantee={grantee}
+                index={i}
                 showTimeline={true}
               />
             ))}
@@ -421,7 +419,7 @@ export default function Portfolio() {
           style={{ fontFamily: MONO, color: MUTED, borderColor: HAIRLINE, marginTop: "40px" }}
         >
           <div className="max-w-xl">
-            <span className="font-bold text-slate-800">Martian Cartography Specimen Sources:</span>
+            <span className="font-bold text-[#1e3a5f]">Martian Cartography Specimen Sources:</span>
             <ul className="mt-2 space-y-1 list-none p-0 normal-case">
               <li>Illustration from Percival Lowell’s <span className="italic font-serif">Mars</span> (1895)</li>
               <li>Illustration from Percival Lowell’s <span className="italic font-serif">Mars and its Canals</span> (1906)</li>
