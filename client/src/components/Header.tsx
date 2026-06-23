@@ -49,9 +49,10 @@ export default function Header({ isTransitioning = false }: { isTransitioning?: 
           : window.scrollY > window.innerHeight * 0.9;
       };
       setRevealed(false);
-      setMobilePastHero(true);
+      setMobilePastHero(false);
       const update = () => {
         const currentY = window.scrollY;
+        setMobilePastHero(currentY > 60);
         const past = isPastHero();
         if (!past) {
           setRevealed(false);
