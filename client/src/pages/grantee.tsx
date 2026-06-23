@@ -364,15 +364,15 @@ export default function Grantee() {
           {/* Left Column: Lato Metadata */}
           <Reveal className="order-last md:order-first md:col-start-1 md:row-start-1 flex flex-col gap-6 font-lato text-[0.75rem] tracking-wider text-slate-400 select-none">
             <div>
-              <div className="text-slate-900 font-bold uppercase mb-1">Cycle</div>
+              <div className="text-[#1e3a5f] font-bold uppercase mb-1">Cycle</div>
               <div className="text-slate-700">2026</div>
             </div>
             <div>
-              <div className="text-slate-900 font-bold uppercase mb-1">Focus</div>
+              <div className="text-[#1e3a5f] font-bold uppercase mb-1">Focus</div>
               <div className="text-[#0c3981] font-bold uppercase">{TYPE_LABELS[grantee.type]}</div>
             </div>
             <div>
-              <div className="text-slate-900 font-bold uppercase mb-1">Themes</div>
+              <div className="text-[#1e3a5f] font-bold uppercase mb-1">Themes</div>
               <ul className="list-none p-0 m-0 space-y-1 text-slate-700">
                 {grantee.themes.map((theme, idx) => (
                   <li key={idx}>{theme}</li>
@@ -405,7 +405,7 @@ export default function Grantee() {
                   <Reveal
                     key={i}
                     as="p"
-                    className="text-[1.328rem] sm:text-[1.406rem] leading-relaxed text-slate-800"
+                    className="text-[1.328rem] sm:text-[1.406rem] leading-relaxed text-[#2a4e7a]"
                     style={{ fontFamily: SERIF, color: BODY }}
                     data-testid={`text-summary-${i}`}
                   >
@@ -521,7 +521,7 @@ export default function Grantee() {
                   <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-slate-500 pointer-events-none" />
                   
                   <p 
-                    className="text-[0.875rem] leading-relaxed text-slate-800 font-normal text-left"
+                    className="text-[0.875rem] leading-relaxed text-[#2a4e7a] font-normal text-left"
                     style={{ fontFamily: SANS }}
                   >
                     {tooltipState.text}

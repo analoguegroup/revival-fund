@@ -15,7 +15,7 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 justify-between items-start">
           <div className="flex flex-col gap-3 max-w-[34rem]">
             <p className="font-mono text-[0.86rem] tracking-[0.15em] leading-relaxed m-0" style={{ color: "var(--parchment)" }}>
-              The Revival Fund is an initiative of{" "}
+              The Revival Fund is a program of{" "}
               <a
                 href="https://analoguegroup.org/"
                 target="_blank"

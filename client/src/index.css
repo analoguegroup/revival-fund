@@ -74,7 +74,7 @@
   --gold-bright: #092a63;
   --bronze-light: #0c3981;
   --link-gold: #785606;
-  --parchment: #0a0c12;
+  --parchment: #1e3a5f;
   --clay: #565d6e;
   --gutter: 6vw;
 
@@ -84,26 +84,26 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .07);
   --background: 40 8% 97%;
-  --foreground: 222 18% 11%;
+  --foreground: 213 51% 25%;
   --border: 40 5% 86%;
   --card: 40 9% 99%;
-  --card-foreground: 222 18% 11%;
+  --card-foreground: 213 51% 25%;
   --card-border: 40 5% 86%;
   --sidebar: 40 9% 99%;
-  --sidebar-foreground: 222 18% 11%;
+  --sidebar-foreground: 213 51% 25%;
   --sidebar-border: 40 5% 86%;
   --sidebar-primary: 217 83% 27%;
   --sidebar-primary-foreground: 220 20% 96%;
   --sidebar-accent: 40 5% 89%;
-  --sidebar-accent-foreground: 222 18% 11%;
+  --sidebar-accent-foreground: 213 51% 25%;
   --sidebar-ring: 217 83% 27%;
   --popover: 40 9% 99%;
-  --popover-foreground: 222 18% 11%;
+  --popover-foreground: 213 51% 25%;
   --popover-border: 40 5% 86%;
   --primary: 217 83% 27%;
   --primary-foreground: 220 20% 96%;
   --secondary: 40 5% 89%;
-  --secondary-foreground: 222 18% 11%;
+  --secondary-foreground: 213 51% 25%;
   --muted: 40 5% 89%;
   --muted-foreground: 222 14% 36%;
   --accent: 217 83% 27%;
@@ -512,7 +512,7 @@
 }
 
 .lgr-row:hover {
-  background: rgba(28, 27, 26, 0.025);
+  background: rgba(30, 58, 95, 0.025);
 }
 
 .reading-link {

@@ -340,12 +340,12 @@ export default function Projects() {
 
         {/* Page header */}
         <div
-          className="pt-[max(18vh,150px)] sm:pt-[max(22vh,180px)] pb-[6vh]"
+          className="pt-[max(12vh,86px)] sm:pt-[max(22vh,180px)] pb-[4vh] sm:pb-[6vh]"
           style={{ borderBottom: `1.5px solid ${HAIRLINE}` }}
         >
 
           <h1
-            className="text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.05]"
+            className="text-[clamp(1.6rem,8vw,4.5rem)] leading-[1.05]"
             style={{ fontFamily: "var(--font-display)", color: INK }}
             data-testid="text-projects-title"
           >

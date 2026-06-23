@@ -524,14 +524,14 @@ export default function About() {
                     style={{ color: INK }}
                     data-testid={r.testId}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 min-w-0">
-                      <span className="rl-title text-xl md:text-2xl font-light shrink min-w-0" style={{ fontFamily: SERIF }}>
+                    <div className="flex flex-col lg:flex-row lg:items-baseline gap-1 lg:gap-4 min-w-0">
+                      <span className="rl-title text-xl font-light shrink min-w-0" style={{ fontFamily: SERIF }}>
                         {r.title}
                       </span>
-                      <span className="hidden sm:inline-flex flex-1" aria-hidden="true">
+                      <span className="hidden lg:inline-flex flex-1" aria-hidden="true">
                         <Leader />
                       </span>
-                      <span className="rl-meta flex items-center gap-2 shrink-0 text-sm uppercase tracking-[0.1em] mt-1 sm:mt-0" style={{ fontFamily: MONO, color: MUTED }}>
+                      <span className="rl-meta flex items-center gap-2 shrink-0 text-sm uppercase tracking-[0.1em] mt-1 lg:mt-0" style={{ fontFamily: MONO, color: MUTED }}>
                         {r.source}
                         <ArrowUpRight className="w-4 h-4" />
                       </span>

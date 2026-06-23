@@ -1,11 +1,11 @@
 import Reveal from "@/components/Reveal";
 import type { ReactNode } from "react";
 
-export const INK = "#1C1B1A";
+export const INK = "#1e3a5f";
 export const ACCENT = "#0c3981";
 export const HAIRLINE = "#E2DFD8";
-export const MUTED = "rgba(28, 27, 26, 0.55)";
-export const BODY = "rgba(28, 27, 26, 0.82)";
+export const MUTED = "rgba(30, 58, 95, 0.55)";
+export const BODY = "rgba(30, 58, 95, 0.82)";
 export const MONO = "'Lato', sans-serif";
 export const SERIF = "'Cardo', serif";
 export const SANS = "'Lato', sans-serif";
@@ -175,7 +175,7 @@ export function EditorialSection({
   return (
     <Reveal
       as="div"
-      className={`grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-6 md:gap-10 lg:gap-14 relative ${mbClass}`}
+      className={`grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-6 lg:gap-14 relative ${mbClass}`}
     >
       {/* Curved Star Crosshair at the intersection on desktop */}
       <CrosshairStar className="absolute top-0 left-[-36px] -translate-x-1/2 -translate-y-1/2 hidden sm:block pointer-events-none" />
@@ -229,9 +229,9 @@ export function RegisterEntry({
       data-testid={testId}
     >
       {title && (
-        <div className="flex items-baseline gap-3 sm:gap-4 min-w-0">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 sm:gap-x-4 min-w-0">
           <h3
-            className="text-[0.75rem] uppercase tracking-[0.12em] shrink-0"
+            className="text-[0.75rem] uppercase tracking-[0.12em]"
             style={{ fontFamily: MONO, color: accent ? ACCENT : INK }}
           >
             {title}

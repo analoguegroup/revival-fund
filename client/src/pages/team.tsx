@@ -17,9 +17,9 @@ import davidPhoto from "@/assets/images/team/david-lang.jpg";
 import peterPhoto from "@/assets/images/team/peter-wang.webp";
 
 
-const INK = "#1C1B1A";
+const INK = "#1e3a5f";
 const HAIRLINE = "#E2DFD8";
-const BODY = "rgba(28, 27, 26, 0.82)";
+const BODY = "rgba(30, 58, 95, 0.82)";
 const MONO = "'Lato', sans-serif";
 const SERIF = "'Cardo', serif";
 
@@ -374,7 +374,7 @@ function PersonSection({
   people: PersonData[];
   largeText?: boolean;
 }) {
-  const GRID = "grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-x-10 lg:gap-x-14";
+  const GRID = "grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-x-10 lg:gap-x-14";
   return (
     <div className="mb-28 sm:mb-40">
       {/* Section header row */}
@@ -385,14 +385,14 @@ function PersonSection({
         <div className="pt-4 animate-none" style={{ borderTop: `1px dashed ${HAIRLINE}` }}>
           <SectionHead num={num} title={title} testId={testId} />
         </div>
-        <div className="pt-4 hidden md:block" style={{ borderTop: `1px dashed ${HAIRLINE}` }} />
+        <div className="pt-4 hidden lg:block" style={{ borderTop: `1px dashed ${HAIRLINE}` }} />
       </div>
       {/* Per-person rows — split into two grid rows so photo top = bio top */}
       {people.map((person, i) => (
         <Reveal key={person.testId}>
           {/* Row 1: name + role (left cell empty) */}
           <div className={GRID}>
-            <div className="hidden md:block" />
+            <div className="hidden lg:block" />
             <div className={`flex flex-col gap-y-2 ${i === 0 ? "pt-0" : "pt-7 sm:pt-9"}`} data-testid={person.testId}>
               <div className="flex items-baseline gap-3 sm:gap-4 min-w-0">
                 <h3
@@ -415,7 +415,7 @@ function PersonSection({
           </div>
           {/* Row 2: photo (left) + bio + links (right) — tops aligned */}
           <div className={`${GRID} items-start mt-4 sm:mt-6`}>
-            <div className="hidden md:flex justify-start">
+            <div className="hidden lg:flex justify-start">
               <PersonPhoto
                 photo={person.photo}
                 name={person.name}
@@ -425,6 +425,16 @@ function PersonSection({
               />
             </div>
             <div className="flex flex-col gap-y-3 pb-7 sm:pb-9">
+              {/* Headshot shown inline for mobile/tablet */}
+              <div className="flex lg:hidden mb-1">
+                <PersonPhoto
+                  photo={person.photo}
+                  name={person.name}
+                  testId={person.testId}
+                  zoom={person.photoZoom}
+                  offsetX={person.photoOffsetX}
+                />
+              </div>
               <p
                 className={`${largeText ? "text-[17.5px] sm:text-[20px]" : "text-sm sm:text-base"} leading-relaxed`}
                 style={{ fontFamily: SERIF, color: INK }}
@@ -458,7 +468,7 @@ export function TeamContent({ isEmbedded = false, largeText = false }: { isEmbed
         <CrosshairStar className="absolute top-0 left-[-36px] -translate-x-1/2 -translate-y-1/2 hidden sm:block pointer-events-none" />
         <PatronSVGFilters />
         <div
-          className="grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-6 md:gap-10 lg:gap-14"
+          className="grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-6 lg:gap-14"
         >
           <div>
             <SectionHead num="01" title="Patrons" testId="text-team-patrons-label" />

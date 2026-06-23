@@ -30,10 +30,11 @@ const FLAT: Leaf[] = NAV_TREE.flatMap((item) => [
   ...(item.children ?? []),
 ]);
 
-export default function SideNav({ revealed = true }: { revealed?: boolean }) {
+export default function SideNav({ revealed = true, mobilePastHero = false }: { revealed?: boolean; mobilePastHero?: boolean }) {
   const [location, navigate] = useLocation();
   const [isDesktop, setIsDesktop] = useState(false);
   const [activeSection, setActiveSection] = useState("about");
+  const [mobileAtBottom, setMobileAtBottom] = useState(false);
 
   const pendingScroll = useRef<string | null>(null);
 
@@ -44,6 +45,18 @@ export default function SideNav({ revealed = true }: { revealed?: boolean }) {
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
+
+  useEffect(() => {
+    if (isDesktop) return;
+    const update = () => {
+      const nearBottom =
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 120;
+      setMobileAtBottom(nearBottom);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, [isDesktop]);
 
   // Scroll spy: highlight the hole matching the section currently in view
   // (only on the home route, where About / Team / FAQ are stacked sections).
@@ -301,13 +314,21 @@ export default function SideNav({ revealed = true }: { revealed?: boolean }) {
 
     return (
       <div className="flex flex-col items-center gap-3">
-        {/* Main navigation links */}
+        {/* Main navigation links — always visible */}
         <div className="flex flex-row flex-wrap items-center justify-center gap-x-5 gap-y-2">
           {internalItems.map((item) => renderItem(item, false))}
         </div>
-        {/* Small separator and external links */}
+        {/* Social/external links — only when near bottom of page */}
         {externalItems.length > 0 && (
-          <div className="flex flex-row items-center justify-center gap-5 border-t border-[#7a766e]/20 pt-2 w-full max-w-[240px]">
+          <div
+            className="flex flex-row items-center justify-center gap-5 border-t border-[#7a766e]/20 pt-2 w-full max-w-[240px] overflow-hidden"
+            style={{
+              maxHeight: mobileAtBottom ? "40px" : "0px",
+              opacity: mobileAtBottom ? 1 : 0,
+              transition: "max-height 0.35s ease, opacity 0.3s ease",
+              pointerEvents: mobileAtBottom ? "auto" : "none",
+            }}
+          >
             {externalItems.map((item) => renderExternalItem(item))}
           </div>
         )}
@@ -315,15 +336,18 @@ export default function SideNav({ revealed = true }: { revealed?: boolean }) {
     );
   };
 
+  // Desktop: gated by `revealed`; Mobile: visible once past the hero
+  const navVisible = isDesktop ? revealed : mobilePastHero;
+
   return (
     <nav
       className="nav-bottom-bar fixed z-[1000] left-0 right-0 bottom-0 px-4 py-3 flex justify-center sm:left-0 sm:right-auto sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:block sm:px-0 sm:py-0 sm:bg-none"
       data-testid="nav-side"
-      aria-hidden={!revealed}
-      {...(!revealed ? { inert: "" as unknown as boolean } : {})}
+      aria-hidden={!navVisible}
+      {...(!navVisible ? { inert: "" as unknown as boolean } : {})}
       style={{
-        opacity: revealed ? 1 : 0,
-        pointerEvents: revealed ? "auto" : "none",
+        opacity: navVisible ? 1 : 0,
+        pointerEvents: navVisible ? "auto" : "none",
         transition: "opacity 0.4s ease",
       }}
     >
